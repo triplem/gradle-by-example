@@ -3,6 +3,10 @@
  */
 package org.javafreedom.list
 
+/**
+ * Some dummy documentation, to show that dokka is working in this project.
+ *
+ */
 class LinkedList {
     private var head: Node? = null
 

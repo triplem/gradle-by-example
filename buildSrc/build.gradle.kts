@@ -13,5 +13,6 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin")
+    implementation(kotlin("gradle-plugin"))
+    implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.4.20")
 }

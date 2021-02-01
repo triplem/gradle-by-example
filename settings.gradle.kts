@@ -11,6 +11,13 @@ import org.gradle.kotlin.dsl.support.listFilesOrdered
 
 rootProject.name = "article"
 
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        jcenter()
+    }
+}
+
 fun includeProjectsInDir(dirName: String) {
     file(dirName).listFilesOrdered { it.isDirectory }
         .forEach { dir ->
