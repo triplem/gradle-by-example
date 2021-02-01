@@ -3,26 +3,27 @@
  */
 package org.javafreedom.list
 
-import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
+import assertk.assertThat
+import assertk.assertions.*
+import kotlin.test.Test
 
 class LinkedListTest {
+
     @Test fun testConstructor() {
         val list = LinkedList()
-        assertEquals(0, list.size())
+        assertThat(list.size()).isEqualTo(0)
     }
 
     @Test fun testAdd() {
         val list = LinkedList()
 
         list.add("one")
-        assertEquals(1, list.size())
-        assertEquals("one", list.get(0))
+        assertThat(list.size()).isEqualTo(1)
+        assertThat(list.get(0)).isEqualTo("one")
 
         list.add("two")
-        assertEquals(2, list.size())
-        assertEquals("two", list.get(1))
+        assertThat(list.size()).isEqualTo(2)
+        assertThat(list.get(1)).isEqualTo("two")
     }
 
     @Test fun testRemove() {
@@ -30,13 +31,13 @@ class LinkedListTest {
 
         list.add("one")
         list.add("two")
-        assertTrue(list.remove("one"))
+        assertThat(list.remove("one")).isTrue()
 
-        assertEquals(1, list.size())
-        assertEquals("two", list.get(0))
+        assertThat(list.size()).isEqualTo(1)
+        assertThat(list.get(0)).isEqualTo("two")
 
-        assertTrue(list.remove("two"))
-        assertEquals(0, list.size())
+        assertThat(list.remove("two")).isTrue()
+        assertThat(list.size()).isEqualTo(0)
     }
 
     @Test fun testRemoveMissing() {
@@ -44,7 +45,8 @@ class LinkedListTest {
 
         list.add("one")
         list.add("two")
-        assertFalse(list.remove("three"))
-        assertEquals(2, list.size())
+        assertThat(list.size()).isEqualTo(2)
+        assertThat(list.remove("three")).isFalse()
+        assertThat(list.size()).isEqualTo(2)
     }
 }

@@ -26,8 +26,11 @@ dependencies {
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    // Align versions of all Kotlin components
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+    // Add additonal dependencies useful for development
+    implementation("io.github.microutils:kotlin-logging:2.0.4")
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.23")
+    testImplementation(kotlin("test"))
+    testImplementation(kotlin("test-junit5"))
 
     // Use JUnit Jupiter API for testing.
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.2")
