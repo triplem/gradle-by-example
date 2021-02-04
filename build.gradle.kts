@@ -1,10 +1,12 @@
-import org.owasp.dependencycheck.reporting.ReportGenerator.Format
-
 plugins {
     id("org.jetbrains.dokka")
 
     id("org.javafreedom.verification.jacoco-consumer-conventions")
     id("org.javafreedom.verification.test-consumer-conventions")
+}
+
+allprojects {
+    group = "org.javafreedom.gradle"
 }
 
 allprojects {
