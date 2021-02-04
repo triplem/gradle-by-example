@@ -1,5 +1,7 @@
 plugins {
     id("org.jetbrains.dokka")
+    id("org.sonarqube")
+    id("jacoco")
 }
 
 repositories {

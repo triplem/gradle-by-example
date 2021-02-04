@@ -15,4 +15,5 @@ repositories {
 dependencies {
     implementation(kotlin("gradle-plugin"))
     implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.4.20")
+    implementation("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.1.1")
 }

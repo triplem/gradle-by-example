@@ -4,11 +4,11 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import kotlin.test.Test
 
-class InternalDummyClassTest {
+class AnotherInternalDummyClassTest {
 
     @Test
     fun testInternalDummyClass() {
-        val dummy = InternalDummyClass("name")
+        val dummy = AnotherInternalDummyClass("name")
 
         assertThat(dummy.name).isEqualTo("name")
     }
