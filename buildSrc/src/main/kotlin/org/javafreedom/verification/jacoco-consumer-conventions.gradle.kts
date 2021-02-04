@@ -1,5 +1,6 @@
-import gradle.kotlin.dsl.accessors._0ae543fa341150e6e34a96d6d2b22b02.implementation
-import gradle.kotlin.dsl.accessors._0ae543fa341150e6e34a96d6d2b22b02.test
+package org.javafreedom.verification
+
+import org.gradle.kotlin.dsl.*
 
 plugins {
     java
@@ -49,9 +50,8 @@ val coverageClassPath: Configuration by configurations.creating {
     }
 }
 
-
 // Task to gather code coverage from multiple subprojects
-val codeCoverageReport by tasks.registering(JacocoReport::class) {
+val aggregateJacocoTestReport by tasks.registering(JacocoReport::class) {
     additionalClassDirs(coverageClassPath.incoming.artifactView { lenient(true) }.files)
     additionalSourceDirs(sourcesPath.incoming.artifactView { lenient(true) }.files)
     executionData(coverageDataPath.incoming.artifactView { lenient(true) }.files.filter { it.exists() })
@@ -69,5 +69,5 @@ val codeCoverageReport by tasks.registering(JacocoReport::class) {
 
 // Make JaCoCo report generation part of the 'check' lifecycle phase
 tasks.check {
-    dependsOn(codeCoverageReport)
+    dependsOn(aggregateJacocoTestReport)
 }

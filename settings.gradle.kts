@@ -8,7 +8,6 @@ import org.gradle.kotlin.dsl.support.listFilesOrdered
  * Detailed information about configuring a multi-project build in Gradle can be found
  * in the user manual at https://docs.gradle.org/6.8.1/userguide/multi_project_builds.html
  */
-
 rootProject.name = "article"
 
 pluginManagement {
@@ -18,15 +17,19 @@ pluginManagement {
     }
 }
 
+fun includeProject(dir: File) {
+    include(dir.name)
+    val prj = project(":${dir.name}")
+    prj.projectDir = dir
+    prj.buildFileName = "${dir.name}.gradle.kts"
+    require(prj.projectDir.isDirectory) { "Project '${prj.path} must have a ${prj.projectDir} directory" }
+    require(prj.buildFile.isFile) { "Project '${prj.path} must have a ${prj.buildFile} build script" }
+}
+
 fun includeProjectsInDir(dirName: String) {
     file(dirName).listFilesOrdered { it.isDirectory }
         .forEach { dir ->
-            include(dir.name)
-            val prj = project(":${dir.name}")
-            prj.projectDir = dir
-            prj.buildFileName = "${dir.name}.gradle.kts"
-            require(prj.projectDir.isDirectory) { "Project '${prj.path} must have a ${prj.projectDir} directory" }
-            require(prj.buildFile.isFile) { "Project '${prj.path} must have a ${prj.buildFile} build script" }
+            includeProject(dir)
         }
 }
 
