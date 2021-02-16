@@ -34,3 +34,4 @@ fun includeProjectsInDir(dirName: String) {
 }
 
 includeProjectsInDir("modules")
+includeProject(file("documentation"))
