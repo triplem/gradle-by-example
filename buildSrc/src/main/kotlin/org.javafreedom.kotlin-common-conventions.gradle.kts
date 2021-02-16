@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.*
 plugins {
     java
     kotlin("jvm")
+    id("org.jetbrains.dokka")
+
     id("org.javafreedom.verification.test-producer-conventions")
     id("org.javafreedom.verification.jacoco-producer-conventions")
 }
