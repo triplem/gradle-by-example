@@ -5,6 +5,7 @@ plugins {
     kotlin("jvm")
     id("org.jetbrains.dokka")
 
+    id("org.javafreedom.verification.detekt-producer-conventions")
     id("org.javafreedom.verification.test-producer-conventions")
     id("org.javafreedom.verification.jacoco-producer-conventions")
 }
