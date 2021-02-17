@@ -3,10 +3,7 @@ plugins {
 
     id("org.javafreedom.verification.jacoco-consumer-conventions")
     id("org.javafreedom.verification.test-consumer-conventions")
-}
-
-allprojects {
-    group = "org.javafreedom.gradle"
+    id("org.javafreedom.documentation.documentation-consumer-conventions")
 }
 
 allprojects {
@@ -25,4 +22,5 @@ tasks.dokkaHtmlMultiModule.configure {
 
 dependencies {
     implementation(project(":app"))
+    asciidoc(project(":documentation"))
 }

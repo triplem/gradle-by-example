@@ -15,7 +15,7 @@ repositories {
 val revDate = System.getenv()["revdate"] ?: LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 val revNumber = System.getenv()["revnumber"] ?: "DEV-Version"
 
-tasks.getByName<AsciidoctorTask>("asciidoctor") {
+val asciidoctorTask = tasks.named<AsciidoctorTask>("asciidoctor") {
     setSourceDir(file("docs"))
     setOutputDir(file("$buildDir/docs"))
 
@@ -38,4 +38,18 @@ tasks.getByName<AsciidoctorTask>("asciidoctor") {
             "revdate"            to "$revDate"
         )
     )
+}
+
+configurations.create("asciidoctorHtmlFolder") {
+    isVisible = false
+    isCanBeResolved = false
+    isCanBeConsumed = true
+    attributes {
+        attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.DOCUMENTATION))
+        attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named("asciidoc-html-folder"))
+    }
+
+    outgoing.artifact(asciidoctorTask.map { task ->
+        task.outputDir
+    })
 }
