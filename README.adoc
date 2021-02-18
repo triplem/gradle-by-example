@@ -1,1 +1,1 @@
-= Gradle Showcase
+= Gradle By Example

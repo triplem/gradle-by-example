@@ -52,9 +52,14 @@ configurations.create("coverageDataElements") {
     }
 
     // This will cause the test task to run if the coverage data is requested by the aggregation task
-    tasks.withType<Test>().configureEach {
-        outgoing.artifact(extensions.getByType<JacocoTaskExtension>().destinationFile!!)
-    }
+    outgoing.artifact(tasks.test.map { task ->
+        task.extensions.getByType<JacocoTaskExtension>().destinationFile!!
+    })
+
+    outgoing.artifact(tasks.named<Test>("integrationTest").map { task ->
+        task.extensions.getByType<JacocoTaskExtension>().destinationFile!!
+    })
+
 }
 
 // Share the output folder of each project with the coverage report

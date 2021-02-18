@@ -4,10 +4,11 @@ plugins {
     java
     kotlin("jvm")
     id("org.jetbrains.dokka")
+    id("io.gitlab.arturbosch.detekt")
 
-    id("org.javafreedom.verification.detekt-producer-conventions")
-    id("org.javafreedom.verification.jacoco-producer-conventions")
+    // the following conventions depend on each other, keep them in the following order
     id("org.javafreedom.verification.test-producer-conventions")
+    id("org.javafreedom.verification.jacoco-producer-conventions")
 }
 
 repositories {
@@ -23,6 +24,18 @@ java {
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.majorVersion
+    }
+}
+
+detekt {
+    buildUponDefaultConfig = false
+    ignoreFailures = true
+
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        txt.enabled = false
+        sarif.enabled = false
     }
 }
 

@@ -1,9 +1,14 @@
+import io.gitlab.arturbosch.detekt.Detekt
+
 plugins {
     id("org.jetbrains.dokka")
 
     id("org.javafreedom.verification.jacoco-consumer-conventions")
     id("org.javafreedom.verification.test-consumer-conventions")
     id("org.javafreedom.documentation.documentation-consumer-conventions")
+
+    id("org.javafreedom.verification.sonarqube-conventions")
+    id("org.javafreedom.aggregation-conventions")
 }
 
 allprojects {
