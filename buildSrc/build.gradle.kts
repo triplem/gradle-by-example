@@ -23,4 +23,5 @@ dependencies {
     }
     implementation("org.owasp:dependency-check-gradle:6.1.0")
     implementation("org.asciidoctor:asciidoctor-gradle-jvm:3.2.0")
+    implementation("com.bmuschko:gradle-docker-plugin:6.7.0")
 }
