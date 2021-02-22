@@ -1,9 +1,11 @@
 import io.gitlab.arturbosch.detekt.Detekt
+import org.owasp.dependencycheck.reporting.ReportGenerator
 
 plugins {
     id("org.javafreedom.verification.jacoco-consumer-conventions")
     id("io.gitlab.arturbosch.detekt")
     id("org.sonarqube")
+    id("org.owasp.dependencycheck")
 }
 
 // right now, there is no real aggregation of detekt, therefor we are just adding all
@@ -40,4 +42,11 @@ subprojects {
             }
         }
     }
+}
+
+dependencyCheck {
+    failBuildOnCVSS = 3F
+    formats = listOf(ReportGenerator.Format.HTML,
+        ReportGenerator.Format.JUNIT, ReportGenerator.Format.XML)
+    suppressionFile = "${rootProject.rootDir}/config/owasp/owasp-supression.xml"
 }
