@@ -1,1 +1,19 @@
 = Gradle By Example
+
+ifdef::env-github,env-browser[]
+:toc: preamble
+:toclevels: 1
+endif::[]
+ifdef::env-github[]
+:outfilesuffix: .adoc
+:!toc-title:
+endif::[]
+:img-semantic-release: https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg
+:uri-semantic-release: https://github.com/semantic-release/semantic-release
+:img-sonarcloud: https://sonarcloud.io/api/project_badges/measure?project=gradle-by-example&metric=alert_status
+:uri-sonarcloud: https://sonarcloud.io/dashboard?id=gradle-by-example
+:img-actions: https://github.com/triplem/gradle-by-example/actions/workflows/continuous-integration.yml/badge.svg
+
+image:{img-semantic-release}[Semantic Release Badge,link={uri-semantic-release}]
+image:{img-sonarcloud}[Sonarcloud Status,link={uri-sonarcloud}]
+image:{img-actions}[CI Workflow]

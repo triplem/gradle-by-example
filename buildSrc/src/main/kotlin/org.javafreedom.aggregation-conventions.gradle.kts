@@ -1,5 +1,6 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import org.owasp.dependencycheck.reporting.ReportGenerator
+import org.sonarqube.gradle.SonarQubeTask
 
 plugins {
     id("org.javafreedom.verification.jacoco-consumer-conventions")
@@ -31,15 +32,34 @@ val aggregateDetektTask = tasks.register<Detekt>("aggregateDetekt") {
 }
 
 subprojects {
+    tasks.register("debug") {
+        val sonarTestSources = mutableListOf<String>()
+        sonarTestSources.add("src/testIntegration")
+        sonarTestSources.add("src/test")
+        val testDirs = sonarTestSources.filter { this.project.projectDir.resolve(it).exists() }.joinToString()
+
+        println("project: ${project.name} - $testDirs")
+    }
+
     if (this.name != "documentation") {
-        val sonarSource = this.projectDir.resolve("src/main").absolutePath
         val reportsDir = this.buildDir.resolve("reports/detekt/detekt.xml").absolutePath
+        val baseDir = this.projectDir
+
+        val sonarTestSources = mutableListOf<String>()
+        sonarTestSources.add("src/test")
+        sonarTestSources.add("src/testIntegration")
+        val testDirs = sonarTestSources.filter { baseDir.resolve(it).exists() }.joinToString()
 
         sonarqube {
             properties {
-                property("sonar.sources", sonarSource)
+                property("sonar.sources", "src/main")
                 property("sonar.kotlin.detekt.reportPaths", reportsDir)
+                property("sonar.tests", testDirs)
             }
+        }
+
+        tasks.withType<SonarQubeTask>().configureEach {
+            shouldRunAfter("detekt")
         }
     }
 }

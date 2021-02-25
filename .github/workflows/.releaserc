@@ -1,0 +1,16 @@
+{
+    "branches": ["main"],
+    "plugins": [
+        "@semantic-release/commit-analyzer",
+        "@semantic-release/release-notes-generator",
+        ["@semantic-release/github", {
+            "assets": [
+                {"path": "../../modules/app/build/distributions/app.tar", "label": "Assembly - Tar ${nextRelease.version}"},
+                {"path": "../../modules/app/build/distributions/app.zip", "label": "Assembly - Zip ${nextRelease.version}"}
+            ]
+        }],
+        ["@semantic-release/exec", {
+           "prepareCmd" : "./release.sh ${nextRelease.version}"
+        }]
+    ]
+}

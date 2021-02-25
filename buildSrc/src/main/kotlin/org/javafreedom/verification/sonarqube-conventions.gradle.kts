@@ -34,6 +34,6 @@ tasks.withType<SonarQubeTask>().configureEach {
     dependsOn(project.tasks.named("aggregateJacocoTestReport"))
 }
 
-tasks.named("check") {
-    dependsOn("sonarqube")
-}
+//tasks.named("check") {
+//    dependsOn("sonarqube")
+//}

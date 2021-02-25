@@ -17,9 +17,8 @@ docker {
             "-XX:MinRAMFraction=2", "-XX:MaxRAMFraction=2", "-XX:+UseG1GC",
             "-XX:MaxGCPauseMillis=100", "-XX:+UseStringDeduplication"))
         ports.set(listOf(8080))
-        mainClassName.set(project.application.mainClassName)
+        mainClassName.set(project.application.mainClass)
         images.set(listOf("${project.group}/${rootProject.name}:latest",
             "ghcr.io/${github_org}/${rootProject.name}:${dockerTag}"))
     }
 }
-
