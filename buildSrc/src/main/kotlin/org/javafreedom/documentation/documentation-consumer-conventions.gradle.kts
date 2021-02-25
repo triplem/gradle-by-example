@@ -15,22 +15,14 @@ val asciidoc by configurations.creating {
 
 val dokkaHtmlMultiModuleTask = tasks.named<DokkaMultiModuleTask>("dokkaHtmlMultiModule")
 val testReportTask = tasks.named("testReport")
+val jacocoReportTask = tasks.named("aggregateJacocoTestReport")
 
-tasks.register("aggregateDocumentation") {
-    asciidoc.dependencies
-        .filterIsInstance<ProjectDependency>()
-        .map { it.dependencyProject.tasks.withType<AsciidoctorTask>() }
-        .forEach { dependsOn(it) }
+tasks.register("aggregateReports") {
     dependsOn(dokkaHtmlMultiModuleTask)
     dependsOn(testReportTask)
 
     doLast {
         val targetDir = buildDir.resolve("documentation").toPath()
-
-        copy {
-            into(targetDir.resolve("pages"))
-            from(asciidoc.incoming.artifactView { lenient(true) }.files)
-        }
 
         copy {
             into(targetDir.resolve("dokka"))
@@ -41,6 +33,22 @@ tasks.register("aggregateDocumentation") {
             into(targetDir.resolve("tests"))
             from(testReportTask.map { task -> task.outputs })
         }
+    }
+}
+
+tasks.register("aggregateDocumentation") {
+    asciidoc.dependencies
+        .filterIsInstance<ProjectDependency>()
+        .map { it.dependencyProject.tasks.withType<AsciidoctorTask>() }
+        .forEach { dependsOn(it) }
+
+    doLast {
+        val targetDir = buildDir.resolve("documentation").toPath()
+
+        copy {
+            into(targetDir.resolve("pages"))
+            from(asciidoc.incoming.artifactView { lenient(true) }.files)
+        }
 
         copy {
             into(targetDir)
@@ -48,4 +56,3 @@ tasks.register("aggregateDocumentation") {
         }
     }
 }
-
