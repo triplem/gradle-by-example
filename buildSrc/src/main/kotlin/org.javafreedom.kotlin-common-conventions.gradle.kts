@@ -52,7 +52,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     // Add additonal dependencies useful for development
-    //implementation("io.github.microutils:kotlin-logging:2.0.4")
+    implementation("io.github.microutils:kotlin-logging:2.0.4")
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.23")
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit5"))
 
