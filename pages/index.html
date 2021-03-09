@@ -440,8 +440,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Build a multi-module project with gradle</h1>
 <div class="details">
-<span id="revnumber">version 1.0.0,</span>
-<span id="revdate">2021-03-04</span>
+<span id="revnumber">version 1.0.1,</span>
+<span id="revdate">2021-03-09</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -452,6 +452,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#add-dokka-generation">add Dokka generation</a></li>
 <li><a href="#add-integration-tests">add Integration Tests</a></li>
 <li><a href="#add-jacoco">add Jacoco</a></li>
+<li><a href="#add-detekt">add detekt</a></li>
+<li><a href="#add-sonarqube">add sonarqube</a></li>
+<li><a href="#add-documentation-with-asciidoc">add documentation with asciidoc</a></li>
+<li><a href="#publish-packages">publish packages</a></li>
+<li><a href="#package-docker-container">package docker container</a></li>
 <li><a href="#conclusion">Conclusion</a></li>
 </ul>
 </div>
@@ -465,14 +470,13 @@ whole wide dustbin (uh, www was the correct abbreviation) gives you several solu
 versions of gradle and/or are written in groovy, but I want to use only the kotlin DSL.</p>
 </div>
 <div class="paragraph">
-<p>Since I am currently working on a small project, I am using examples from this pure kotlin project. Kotlin has some specifics in the configuration
-of gradle as well. One of those is the "internal" visiblity modifier. Classes and/or methods marked with this modifier are not visible outside
+<p>Kotlin has some specifics in the configuration of gradle. One of those is the "internal" visiblity modifier. Classes and/or methods marked with this modifier are not visible outside
 of the current module additionally to the test-module. See <a href="https://kotlinlang.org/docs/reference/visibility-modifiers.html#modules">kotlin Visibility Modifiers - Modules</a>
 for further information about the definiton of modules. Due to the fact, that we do want to have integration tests using "internal" methods,
-we need some additional configuration, which is shown in the following as well.</p>
+we need some additional configuration, which is shown in this article as well.</p>
 </div>
 <div class="paragraph">
-<p>Basically additional to a small project provided by the <code>gradle init</code> action, we are going to add some useful tasks, which are necessary in most
+<p>Additionally to the small project provided by the <code>gradle init</code> action, we are going to add some useful tasks, which are necessary in most
 mid-size and larger projects:</p>
 </div>
 <div class="ulist">
@@ -488,6 +492,12 @@ mid-size and larger projects:</p>
 </li>
 <li>
 <p>Sonarqube Reporting</p>
+</li>
+<li>
+<p>OWASP Dependency Check</p>
+</li>
+<li>
+<p>Asciidoctor Documentation</p>
 </li>
 </ul>
 </div>
@@ -507,33 +517,31 @@ as well.</p>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Like already mentioned, we are going to start with <code>gradle init</code> to generate a small multi-module project. Unfortunately, even though we are going
-to use the gradle wrapper in out project, gradle forces us to install gradle itself, to initialize a project. Therefor your first step is to install
+to use the gradle wrapper in out project, gradle forces us to install gradle itself, to initialize a project. Therefore the first step is to install
 gradle on your local machine. This can be done via your local package manager (Yum, Pacman, Homebrew, Chocolatey, &#8230;&#8203;) or manually via
 <a href="https://gradle.org/install/">Gradle Install</a>.</p>
 </div>
 <div class="paragraph">
-<p>So, after installing gradle, we are going to create a first small project via the beforementioned <code>gradle init</code>. We are going to use the following
-additional command-line parameters, which are shortly explained as well. For a full description of those parameters please refer to
-<a href="https://docs.gradle.org/current/userguide/build_init_plugin.html">Gradle Build Init Plugin</a>.</p>
+<p>After installing gradle, we are going to create a first small project via</p>
 </div>
 <div class="paragraph">
-<p>The project is available on <a href="https://github.com/triplem/someproject">github</a>, and the result of each step is put into its own branch.</p>
+<p><code>gradle init --type kotlin-application --dsl kotlin --split-project --project-name gradle-by-example --package org.javafreedom</code></p>
 </div>
 <div class="paragraph">
-<p><code>gradle init --type kotlin-application --dsl kotlin --split-project --project-name article --package org.javafreedom</code></p>
+<p>For a full description of those parameters please refer to <a href="https://docs.gradle.org/current/userguide/build_init_plugin.html">Gradle Build Init Plugin</a>.</p>
 </div>
 <div class="paragraph">
-<p>This will setup a small project with the type <code>kotlin-application</code>, which contains all required components for a kotlin command-line application. Furthermore
-we are going to have some provided sub-modules (<code>split-project</code>). The project-name is usually taken from the name of the directory. To be able to be
-independent of the current directory, we do provide the project-name. The used package is the one used for this example project (<code>org.javafreedom</code>). All
-of those values can be adopted to your personal taste, obviously. The used dsl is kotlin, which will provide us with *.gradle.kts files instead of the groovy
-*.gradle files.</p>
+<p>The above command-line will setup a small project with the type <code>kotlin-application</code>, which contains all required components for a kotlin command-line
+application. Some sub-modules are generated via the <code>split-project</code> parameter. The project-name is usually taken from the name of the directory. To be able to be
+independent of the current directory, we do provide the project-name (<code>project-name</code>). The used package is the one used for this example project
+(<code>package org.javafreedom</code>). All of those values can be adopted to your personal taste, obviously. The used dsl is kotlin, which will provide us
+with *.gradle.kts files instead of the default groovy *.gradle files.</p>
 </div>
 <div class="paragraph">
-<p>Since we are using the projec-type kotlin-application, the pre-configured test-framework is kotlin.test and, quite obviously, the used language is kotlin.</p>
+<p>Since we are using the project-type kotlin-application, the pre-configured test-framework is kotlin.test and, quite obviously, the used language is kotlin.</p>
 </div>
 <div class="paragraph">
-<p>The following project structure is then generated by the <code>gradle init</code>-command:</p>
+<p>The following project structure is generated by the <code>gradle init</code>-command:</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -547,30 +555,31 @@ to be able to fulfill our use-case.</p>
 <div class="paragraph">
 <p>After intializing the project, a first <code>gradlew tasks</code> will show a list of all available tasks.</p>
 </div>
-<div class="paragraph">
-<p>All those changes can also be viewed on <a href="https://github.com/triplem/someproject">github</a></p>
-</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="change-directory-structure">change directory structure</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>I wanted to have all sub-modules gathered in the directory <code>modules</code> and therefor all sub-modules (list, &#8230;&#8203;) are moved to this folder. To be able to discover those
-modules automatically, the settings.gradle.kts is adopted slightly.</p>
+<p>All sub-modules should be gathered in the directory <code>modules</code> and therefore all sub-modules (list, &#8230;&#8203;) are moved to this folder.
+To be able to discover those modules automatically, the settings.gradle.kts is adopted slightly.</p>
 </div>
 <div class="listingblock">
-<div class="title">settings.gradle.kts</div>
+<div class="title"><a href="https://github.com/triplem/gradle-by-example/blob/main/settings.gradle.kts">settings.gradle.kts</a></div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="kotlin"><span class="k">fun</span> <span class="nf">includeProjectsInDir</span><span class="p">(</span><span class="n">dirName</span><span class="p">:</span> <span class="nc">String</span><span class="p">)</span> <span class="p">{</span>
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="k">fun</span> <span class="nf">includeProject</span><span class="p">(</span><span class="n">dir</span><span class="p">:</span> <span class="nc">File</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nf">include</span><span class="p">(</span><span class="n">dir</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="kd">val</span> <span class="py">prj</span> <span class="p">=</span> <span class="nf">project</span><span class="p">(</span><span class="s">":${dir.name}"</span><span class="p">)</span>
+    <span class="n">prj</span><span class="p">.</span><span class="n">projectDir</span> <span class="p">=</span> <span class="n">dir</span>
+    <span class="n">prj</span><span class="p">.</span><span class="n">buildFileName</span> <span class="p">=</span> <span class="s">"${dir.name}.gradle.kts"</span>
+    <span class="nf">require</span><span class="p">(</span><span class="n">prj</span><span class="p">.</span><span class="n">projectDir</span><span class="p">.</span><span class="n">isDirectory</span><span class="p">)</span> <span class="p">{</span> <span class="s">"Project '${prj.path} must have a ${prj.projectDir} directory"</span> <span class="p">}</span>
+    <span class="nf">require</span><span class="p">(</span><span class="n">prj</span><span class="p">.</span><span class="n">buildFile</span><span class="p">.</span><span class="n">isFile</span><span class="p">)</span> <span class="p">{</span> <span class="s">"Project '${prj.path} must have a ${prj.buildFile} build script"</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">fun</span> <span class="nf">includeProjectsInDir</span><span class="p">(</span><span class="n">dirName</span><span class="p">:</span> <span class="nc">String</span><span class="p">)</span> <span class="p">{</span>
     <span class="nf">file</span><span class="p">(</span><span class="n">dirName</span><span class="p">).</span><span class="nf">listFilesOrdered</span> <span class="p">{</span> <span class="n">it</span><span class="p">.</span><span class="n">isDirectory</span> <span class="p">}</span>
         <span class="p">.</span><span class="nf">forEach</span> <span class="p">{</span> <span class="n">dir</span> <span class="p">-&gt;</span>
-            <span class="nf">include</span><span class="p">(</span><span class="n">dir</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
-            <span class="kd">val</span> <span class="py">prj</span> <span class="p">=</span> <span class="nf">project</span><span class="p">(</span><span class="s">":${dir.name}"</span><span class="p">)</span>
-            <span class="n">prj</span><span class="p">.</span><span class="n">projectDir</span> <span class="p">=</span> <span class="n">dir</span>
-            <span class="n">prj</span><span class="p">.</span><span class="n">buildFileName</span> <span class="p">=</span> <span class="s">"${dir.name}.gradle.kts"</span>
-            <span class="nf">require</span><span class="p">(</span><span class="n">prj</span><span class="p">.</span><span class="n">projectDir</span><span class="p">.</span><span class="n">isDirectory</span><span class="p">)</span> <span class="p">{</span> <span class="s">"Project '${prj.path} must have a ${prj.projectDir} directory"</span> <span class="p">}</span>
-            <span class="nf">require</span><span class="p">(</span><span class="n">prj</span><span class="p">.</span><span class="n">buildFile</span><span class="p">.</span><span class="n">isFile</span><span class="p">)</span> <span class="p">{</span> <span class="s">"Project '${prj.path} must have a ${prj.buildFile} build script"</span> <span class="p">}</span>
+            <span class="nf">includeProject</span><span class="p">(</span><span class="n">dir</span><span class="p">)</span>
         <span class="p">}</span>
 <span class="p">}</span>
 
@@ -579,16 +588,16 @@ modules automatically, the settings.gradle.kts is adopted slightly.</p>
 </div>
 <div class="paragraph">
 <p>The above code will basically list all sub-directories of the given directory (modules in this case), and add those directories to the childprojects of the current
-project (which is the root). This is rather generic and adds the possiblity of easily add additional modules (even in different parent-direcotries) like eg. a documentation module.
+project (which is the root project). This is rather generic and adds the possiblity of easily add additional modules (even in different parent-direcotries) like eg. a documentation module.
 Each project contains an own <code>.gradle.kts</code> file, which is named like the containing folder.</p>
+</div>
+<div class="paragraph">
+<p>Please note, that the above mentioned functions are splitted, so that in a later phase we are able to add additional projects in a different directory (documentation).</p>
 </div>
 <div class="imageblock">
 <div class="content">
 <img src="resources/project-structure-modules-added.png" alt="Project structure with modules added">
 </div>
-</div>
-<div class="paragraph">
-<p>All those changes can also be viewed on <a href="https://github.com/triplem/someproject">github</a></p>
 </div>
 </div>
 </div>
@@ -597,7 +606,7 @@ Each project contains an own <code>.gradle.kts</code> file, which is named like 
 <div class="sectionbody">
 <div class="paragraph">
 <p>To be able to write tests, useful logging and other stuff, we do need to provide additional dependencies. Some of those dependencies (like logging) are required
-in all sub-modules and we do declare those in a central space, the convention.</p>
+in all sub-modules, so we do declare those in a central space, the convention.</p>
 </div>
 <div class="paragraph">
 <p>I decided to add the following default dependencies for all kotlin sub-modules:</p>
@@ -616,15 +625,14 @@ in all sub-modules and we do declare those in a central space, the convention.</
 </ul>
 </div>
 <div class="paragraph">
-<p>The common-convention is now containing all the above mentioned additional dependencies. To show off, that those dependencies are
-added to the modules, inside the list-module the Class LinkedListTest was renamed to MutableListTest and contains now statements
-from those dependencies.</p>
+<p>The common-convention contains now all the above mentioned additional dependencies. To show off, that those dependencies are
+added to the modules, inside the list-module the Class LinkedListTest contains now statements from those dependencies.</p>
 </div>
 <div class="paragraph">
-<p>The following code snippet show the additions to the org.javafreedom.kotlin-common-conventions.gradle.kts.</p>
+<p>The following code snippet shows the additions to the org.javafreedom.kotlin-common-conventions.gradle.kts.</p>
 </div>
 <div class="listingblock">
-<div class="title">org.javafreedom.kotlin-common-conventions.gradle.kts</div>
+<div class="title"><a href="https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org.javafreedom.kotlin-common-conventions.gradle.kts">org.javafreedom.kotlin-common-conventions.gradle.kts</a></div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="kotlin"><span class="c1">// Add additonal dependencies useful for development</span>
 <span class="nf">implementation</span><span class="p">(</span><span class="s">"io.github.microutils:kotlin-logging:2.0.4"</span><span class="p">)</span>
@@ -633,24 +641,23 @@ from those dependencies.</p>
 <span class="nf">testImplementation</span><span class="p">(</span><span class="nf">kotlin</span><span class="p">(</span><span class="s">"test-junit5"</span><span class="p">))</span></code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>All those changes can also be viewed on <a href="https://github.com/triplem/someproject?branch=dependencies">github</a></p>
-</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="add-dokka-generation">add Dokka generation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In kotlin, the documentation of classes and methods are generated using dokka (similar to javadoc). This documentation should be generated and aggregated in
-a common place, so that deverlopers can refer to it. Usually dokka is generated for each sub-module, but not aggregated.</p>
+<p>In kotlin, the documentation of classes and methods are generated using dokka (similar to javadoc). This documentation should be generated and
+aggregated in a common place, so that developers can refer to it. Usually dokka is generated for each sub-module, but not aggregated.
+Unfortunately the <a href="https://github.com/Kotlin/dokka">dokka plugin</a> is <a href="https://github.com/Kotlin/dokka/issues/1752">not following the gradle idiomatic way</a>,
+so the plugin needs to get handled in a different manner.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="https://github.com/Kotlin/dokka">dokka plugin</a> can be found in the jcenter Repository and not, like other plugins, in the gradlePluginPortal(). That means,
+<p>The Plugin can be found in the jcenter Repository and not, like other plugins, in the gradlePluginPortal(). That means,
 that we do need to add this repository to the settings.gradle.kts.</p>
 </div>
 <div class="listingblock">
-<div class="title">settings.gradle.kts</div>
+<div class="title"><a href="https://github.com/triplem/gradle-by-example/blob/main/settings.gradle.kts">settings.gradle.kts</a></div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="kotlin"><span class="nf">pluginManagement</span> <span class="p">{</span>
     <span class="nf">repositories</span> <span class="p">{</span>
@@ -662,24 +669,24 @@ that we do need to add this repository to the settings.gradle.kts.</p>
 </div>
 <div class="paragraph">
 <p>It is quite important to add the classpath of this plugin to the buildSrc/build.gradle.kts, to be able to provide a version, which cannot be done
-in the conventions-script itself.</p>
+in the conventions-script itself. To be able to use a later kotlin-version (in this project, we are going to use 1.4.30), the transitive dependency
+on the kotlin stdlib is excluded from the dokka plugin.</p>
 </div>
 <div class="listingblock">
-<div class="title">buildSrc/build.gradle.kts</div>
+<div class="title"><a href="https://github.com/triplem/gradle-by-example/blob/main/buildSrc/build.gradle.kts">buildSrc/build.gradle.kts</a></div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="kotlin"><span class="nf">implementation</span><span class="p">(</span><span class="s">"org.jetbrains.dokka:dokka-gradle-plugin:1.4.20"</span><span class="p">)</span></code></pre>
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="nf">implementation</span><span class="p">(</span><span class="s">"org.jetbrains.dokka:dokka-gradle-plugin:1.4.20"</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nf">exclude</span><span class="p">(</span><span class="n">group</span> <span class="p">=</span> <span class="s">"org.jetbrains.kotlin"</span><span class="p">,</span> <span class="n">module</span> <span class="p">=</span> <span class="s">"kotlin-stdlib-jdk8"</span><span class="p">)</span>
+<span class="p">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>In the convention the plugin can then be used. We also modified the kotlin-jvm plugin to use the DependencyHandler-Extension <code>kotlin</code> to make the
-statement slightly more readable.</p>
+<p>The dokka plugin is then added to the Common-Convention to be able to use this plugin in each kotlin module.</p>
 </div>
 <div class="listingblock">
-<div class="title">org.javafreedom.kotlin-common-conventions.gradle.kts</div>
+<div class="title"><a href="https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org.javafreedom.kotlin-common-conventions.gradle.kts">org.javafreedom.kotlin-common-conventions.gradle.kts</a></div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="kotlin"><span class="nf">plugins</span> <span class="p">{</span>
-    <span class="c1">// Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.</span>
-    <span class="nf">kotlin</span><span class="p">(</span><span class="s">"jvm"</span><span class="p">)</span>
     <span class="nf">id</span><span class="p">(</span><span class="s">"org.jetbrains.dokka"</span><span class="p">)</span>
 <span class="p">}</span></code></pre>
 </div>
@@ -693,7 +700,7 @@ LinkedList-Class. The documentation is then generated in the build/dokka/html-Fo
 file the dokkaHtmlMultiModule-Task is declared.</p>
 </div>
 <div class="listingblock">
-<div class="title">build.gradle.kts</div>
+<div class="title"><a href="https://github.com/triplem/gradle-by-example/blob/main/build.gradle.kts">build.gradle.kts</a></div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="kotlin"><span class="nf">plugins</span> <span class="p">{</span>
     <span class="nf">id</span><span class="p">(</span><span class="s">"org.jetbrains.dokka"</span><span class="p">)</span>
@@ -709,12 +716,24 @@ file the dokkaHtmlMultiModule-Task is declared.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>It is quite important to set the repoositories, because the dokka plugin tries to load some dependencies from this repository. By calling
+<p>It is quite important to add the <code>jcenter()</code>-repository, because the dokka plugin tries to load some dependencies from this repository. By calling
 the task <code>dokkaHtmlMultiModule</code> the dokka-Documentation of all modules is build and then aggregated in the <code>build/dokkaCustomMultiModuleOutput</code>
 directory.</p>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+jcenter will be removed, and we do need to use mavencentral in the future. Please see <a href="https://github.com/triplem/gradle-by-example/issues/1">#1</a>.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
-<p>This step adds the following tasks to the project. Please not especially the *MultiModule-Tasks, which do use the above
+<p>This step adds the following tasks to the project. Note especially the *MultiModule-Tasks, which uses the above
 mentioned configuration.</p>
 </div>
 <div class="listingblock">
@@ -735,83 +754,65 @@ dokkaJekyllMultiModule - Runs all subprojects <span class="s1">'dokkaJekyll'</sp
 javadoc - Generates Javadoc API documentation <span class="k">for </span>the main <span class="nb">source </span>code.</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>All those changes can also be viewed on <a href="https://github.com/triplem/someproject?branch=dokka">github</a></p>
-</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="add-integration-tests">add Integration Tests</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In this step, we are going to add the <code>integrationTest</code>-Task and the associated SourceSet (named testIntegration) to the proejct. Like already mentioned,
-we are going to use conventions. To be able to show some nuts and bolts, we are also adding some additonal classes, so that we can show, that this task can
-also use classes marked with the <code>internal</code> visibility modifier.</p>
+<p>In this step, we are going to add the <code>integrationTest</code>-Task and the associated SourceSet (named testIntegration) to the proejct.
+Like already mentioned, we are going to use conventions. To be able to show some nuts and bolts, we are also adding some additional
+classes, so that we can show, that this task can also use classes marked with the <code>internal</code> visibility modifier.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="https://docs.gradle.org/current/samples/sample_jvm_multi_project_with_additional_test_types.html">gradle Manual</a> offered quite some help here. For a better
-readability of the project structure (meaning: for a better sorting of folders in the project structure), the 'integrationTest' sourceSet is renamed to
-'testIntegration'. This will show the testIntegration-Source-directory after the test-folder, which will make the structure clearer IMHO.</p>
+<p>The <a href="https://docs.gradle.org/current/samples/sample_jvm_multi_project_with_additional_test_types.html">gradle Manual</a> offered quite some
+help here. For a better readability of the project structure (meaning: for a better sorting of folders in the project structure), the
+'integrationTest' sourceSet is renamed to 'testIntegration'. This will show the testIntegration-Source-directory after the test-folder,
+which will make the structure clearer IMHO.</p>
 </div>
 <div class="paragraph">
-<p>To get rid of an "Overload resolution ambiquity"-Message, the following statement is added. This makes sure, that the sourceSets are of the correct type
-and the ambiguity is resolved.</p>
+<p>To keep the project maintainable, the configuration of the Integration Tests is kept in two files, one referenced from the sub-modules,
+which are the producers of the configuration, and one for the consumer, which is the root-project. Those files are referenced in the
+corresponding conventions accordingly.</p>
+</div>
+<div class="paragraph">
+<p>The file <a href="https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/verification/test-producer-conventions.gradle.kts">test-producer-conventions.gradle.kts</a>
+contains the configuration of the sourceset and the task. The visibility of the <code>internal</code> modifier is provided using the following
+statement:</p>
 </div>
 <div class="listingblock">
-<div class="title">org.javafreedom.kotlin-common-conventions.gradle.kts</div>
+<div class="title"><a href="https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/verification/test-producer-conventions.gradle.kts">test-producer-conventions.gradle.kts</a></div>
 <div class="content">
-<pre class="rouge highlight"><code data-lang="kotlin"><span class="c1">// to get rid of "Overload resolution ambiguity"-messsage</span>
-<span class="kd">val</span> <span class="py">sourcesets</span> <span class="p">=</span> <span class="n">project</span><span class="p">.</span><span class="n">extensions</span><span class="p">.</span><span class="nf">getByType</span><span class="p">(</span><span class="nc">SourceSetContainer</span><span class="o">::</span><span class="k">class</span><span class="p">)</span>
-<span class="kd">val</span> <span class="py">testIntegration</span> <span class="k">by</span> <span class="n">sourcesets</span><span class="p">.</span><span class="n">creating</span></code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>One additional step is required to be able to use <code>internal</code> classes in the tests.</p>
-</div>
-<div class="listingblock">
-<div class="title">org.javafreedom.kotlin-common-conventions.gradle.kts</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="kotlin"><span class="kd">val</span> <span class="py">koTarget</span> <span class="p">=</span> <span class="n">kotlin</span><span class="p">.</span><span class="n">target</span> <span class="k">as</span> <span class="nc">KotlinTarget</span>
-<span class="n">koTarget</span><span class="p">.</span><span class="n">compilations</span><span class="p">.</span><span class="nf">getByName</span><span class="p">(</span><span class="s">"testIntegration"</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nf">associateWith</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="n">compilations</span><span class="p">.</span><span class="nf">getByName</span><span class="p">(</span><span class="s">"main"</span><span class="p">))</span>
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="kd">val</span> <span class="py">koTarget</span><span class="p">:</span> <span class="nc">KotlinTarget</span> <span class="p">=</span> <span class="n">kotlin</span><span class="p">.</span><span class="n">target</span>
+<span class="n">koTarget</span><span class="p">.</span><span class="n">compilations</span><span class="p">.</span><span class="nf">named</span><span class="p">(</span><span class="s">"testIntegration"</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nf">associateWith</span><span class="p">(</span><span class="n">target</span><span class="p">.</span><span class="n">compilations</span><span class="p">.</span><span class="nf">named</span><span class="p">(</span><span class="s">"main"</span><span class="p">).</span><span class="k">get</span><span class="p">())</span>
 <span class="p">}</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Unfortunately, IntelliJ does not seem to recognize this association, and therefor these classes cannot get automatically resolved in the
-Editor. This seems to be a known issue, which is currently worked on (see their <a href="https://youtrack.jetbrains.com/issue/KT-17659">Bug-Tracker</a>
-for this).</p>
+<p>According to the <a href="https://youtrack.jetbrains.com/issue/KT-34102">YouTrack-Issue KT-34102</a> IntelliJ IDEA is right now not able
+to recognize the above configuration. Therefore the InternalDummyClassTest in the testIntegration-Sourceset shows an error in IntelliJ,
+but compiles cleanly using gradle.</p>
 </div>
 <div class="paragraph">
-<p>Additionally this steps provides a task to aggregate the test-reports of all sub-modules. This is heavily based on
+<p>The consumer part of the configuration can be found in the file <a href="https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/verification/test-consumer-conventions.gradle.kts">test-consumer-conventions.gradle.kts</a>.
+This configuration consumes the <code>test-report-date</code>, which is produced via the former configuration by all submodules, and aggregates the
+test-reports. This is then done using the task <code>testReport</code> and is heavily based on
 <a href="https://docs.gradle.org/current/userguide/java_testing.html#test_reporting">gradle Test-Reporting</a>.</p>
 </div>
 <div class="paragraph">
-<p>Just one line needs to get added to the "binaryTestResultElements"-Configuration, to be able to aggregate the testIntegration-Reports
+<p>Just one line needs to get added to the "binaryTestResultElements"-Configuration (aka test-report-data), to be able to aggregate the testIntegration-Reports
 as well.</p>
 </div>
 <div class="listingblock">
-<div class="title">org.javafreedom.kotlin-common-conventions.gradle.kts</div>
+<div class="title"><a href="https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/verification/test-producer-conventions.gradle.kts">test-producer-conventions.gradle.kts</a></div>
 <div class="content">
 <pre class="rouge highlight"><code data-lang="kotlin"><span class="n">outgoing</span><span class="p">.</span><span class="nf">artifact</span><span class="p">(</span><span class="n">testIntegrationTask</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="n">task</span> <span class="p">-&gt;</span> <span class="n">task</span><span class="p">.</span><span class="nf">getBinaryResultsDirectory</span><span class="p">().</span><span class="k">get</span><span class="p">()</span> <span class="p">})</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This step adds the following tasks to the project</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="rouge highlight"><code data-lang="bash">Verification tasks
-
-integrationTest - Runs integration tests.</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>On running the <code>integrationTest</code>-Task on the project, all Integration-Test are run and a report is generated in the build/reports/allTests-Folder
+<p>On running the <code>check</code>-Task on the project, all Integration-Test are run, and a report is generated in the build/reports/allTests-Folder
 which does contain the results of all Tests in the project.</p>
-</div>
-<div class="paragraph">
-<p>All those changes can also be viewed on <a href="https://github.com/triplem/someproject?branch=dokka">github</a></p>
 </div>
 </div>
 </div>
@@ -819,9 +820,162 @@ which does contain the results of all Tests in the project.</p>
 <h2 id="add-jacoco">add Jacoco</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Like the dokka documentation, the jacccoco Reports are generated per sub-module, and are then going to get aggregated in the root of the project. We do need to add
-the Report generation, as well as the report aggregation into our small project.</p>
+<p>To get one of the most used metrics in Software development (Coverage), we do need to add jacoco to the project.</p>
 </div>
+<div class="paragraph">
+<p>Like the dokka documentation, the jacccoco Reports are generated per sub-module, and are then aggregated in the root of the project.
+We do need to add the Report generation, as well as the report aggregation into our small project. This is done using the conventions
+<a href="https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/verification/jacoco-producer-conventions.gradle.kts">jacoco-producer</a>
+and <a href="https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/verification/jacoco-consumer-conventions.gradle.kts">jacoco-consumer</a>.</p>
+</div>
+<div class="paragraph">
+<p>The aggregation of the report uses the same approach as the test-reports. The aggregation then produces both xml and html-reports to be
+able to use the reports in the Documentation as well as in the Sonarqube reporting.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="add-detekt">add detekt</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://detekt.github.io/detekt/">detekt</a> is a kotlin specific code-analysis tool and can also be integrated into the sonarqube reports.</p>
+</div>
+<div class="paragraph">
+<p>The following configuration is added to each sub-module and generates the detekt report for those.</p>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org.javafreedom.kotlin-common-conventions.gradle.kts">kotlin-common-conventions.gradle.kts</a></div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="nf">detekt</span> <span class="p">{</span>
+    <span class="n">buildUponDefaultConfig</span> <span class="p">=</span> <span class="k">false</span>
+    <span class="n">ignoreFailures</span> <span class="p">=</span> <span class="k">true</span>
+
+    <span class="nf">reports</span> <span class="p">{</span>
+        <span class="n">html</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">true</span>
+        <span class="n">xml</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">true</span>
+        <span class="n">txt</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">false</span>
+        <span class="n">sarif</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">false</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Since the generated results should get aggregated as well, we do need to add some configuration into the
+root-project. This is done by using the aggregation-convention.</p>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org.javafreedom.aggregation-conventions.gradle.kts">org.javafreedom.aggregation-conventions.gradle.kts</a></div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="kd">val</span> <span class="py">aggregateDetektTask</span> <span class="p">=</span> <span class="n">tasks</span><span class="p">.</span><span class="n">register</span><span class="p">&lt;</span><span class="nc">Detekt</span><span class="p">&gt;(</span><span class="s">"aggregateDetekt"</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">buildUponDefaultConfig</span> <span class="p">=</span> <span class="k">false</span>
+    <span class="n">ignoreFailures</span> <span class="p">=</span> <span class="k">true</span>
+
+    <span class="nf">reports</span> <span class="p">{</span>
+        <span class="n">html</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">true</span>
+        <span class="n">xml</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">true</span>
+        <span class="n">txt</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">false</span>
+        <span class="n">sarif</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">false</span>
+    <span class="p">}</span>
+
+    <span class="nf">source</span><span class="p">(</span>
+        <span class="n">subprojects</span><span class="p">.</span><span class="nf">flatMap</span> <span class="p">{</span> <span class="n">subproject</span> <span class="p">-&gt;</span>
+            <span class="n">subproject</span><span class="p">.</span><span class="n">tasks</span><span class="p">.</span><span class="n">filterIsInstance</span><span class="p">&lt;</span><span class="nc">Detekt</span><span class="p">&gt;().</span><span class="nf">map</span> <span class="p">{</span> <span class="n">task</span> <span class="p">-&gt;</span>
+                <span class="n">task</span><span class="p">.</span><span class="n">source</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Please note, that the aggregation is really a full reporting for all sub-modules. Right now, it is not
+possible to generate an aggregation based on the results of each sub-module (see <a href="https://github.com/detekt/detekt/discussions/3483">detekt github disucssion</a>).</p>
+</div>
+<div class="paragraph">
+<p>Furthermore, detekt uses the kotlinx-html dependency, which is still located on jcenter. This makes it impossible to
+move away from jcenter, which is necessary, since jcenter is in sunset phase. See <a href="https://github.com/Kotlin/kotlinx.html/issues/173">kotlinx.html#173</a> for
+an up-to-date status.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="add-sonarqube">add sonarqube</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://www.sonarqube.org/">Sonarqube</a> is a Static Code Quality tool and offers a free instance or open-source projects on
+<a href="https://sonarcloud.io/">sonarcloud.io</a>. To be able to use this, some configuration is necessary. This configuration uses
+some (eg. jacoco as well as detekt) of the previously described configurations.</p>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/verification/sonarqube-conventions.gradle.kts">sonarqube-conventions.gradle.kts</a></div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="nf">sonarqube</span> <span class="p">{</span>
+    <span class="nf">properties</span> <span class="p">{</span>
+        <span class="c1">// See https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle#AnalyzingwithSonarQubeScannerforGradle-Configureanalysisproperties</span>
+        <span class="nf">property</span><span class="p">(</span><span class="s">"sonar.sourceEncoding"</span><span class="p">,</span> <span class="s">"UTF-8"</span><span class="p">)</span>
+        <span class="nf">property</span><span class="p">(</span><span class="s">"sonar.projectName"</span><span class="p">,</span> <span class="n">rootProject</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="nf">property</span><span class="p">(</span><span class="s">"sonar.projectKey"</span><span class="p">,</span> <span class="nc">System</span><span class="p">.</span><span class="nf">getenv</span><span class="p">()[</span><span class="s">"SONAR_PROJECT_KEY"</span><span class="p">]</span> <span class="o">?:</span> <span class="n">rootProject</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="nf">property</span><span class="p">(</span><span class="s">"sonar.organization"</span><span class="p">,</span> <span class="nc">System</span><span class="p">.</span><span class="nf">getenv</span><span class="p">()[</span><span class="s">"SONAR_ORGANIZATION"</span><span class="p">]</span> <span class="o">?:</span> <span class="n">github_org</span><span class="p">)</span>
+        <span class="nf">property</span><span class="p">(</span><span class="s">"sonar.projectVersion"</span><span class="p">,</span> <span class="n">rootProject</span><span class="p">.</span><span class="n">version</span><span class="p">.</span><span class="nf">toString</span><span class="p">())</span>
+        <span class="nf">property</span><span class="p">(</span><span class="s">"sonar.host.url"</span><span class="p">,</span> <span class="nc">System</span><span class="p">.</span><span class="nf">getenv</span><span class="p">()[</span><span class="s">"SONAR_HOST_URL"</span><span class="p">]</span> <span class="o">?:</span> <span class="s">"https://sonarcloud.io"</span><span class="p">)</span>
+        <span class="nf">property</span><span class="p">(</span><span class="s">"sonar.login"</span><span class="p">,</span> <span class="nc">System</span><span class="p">.</span><span class="nf">getenv</span><span class="p">()[</span><span class="s">"SONAR_TOKEN"</span><span class="p">]</span> <span class="o">?:</span> <span class="s">""</span> <span class="p">)</span>
+        <span class="nf">property</span><span class="p">(</span><span class="s">"sonar.scm.provider"</span><span class="p">,</span> <span class="s">"git"</span><span class="p">)</span>
+        <span class="nf">property</span><span class="p">(</span><span class="s">"sonar.links.homepage"</span><span class="p">,</span> <span class="n">github_project_url</span><span class="p">)</span>
+        <span class="nf">property</span><span class="p">(</span><span class="s">"sonar.links.ci"</span><span class="p">,</span> <span class="s">"$github_project_url/actions"</span><span class="p">)</span>
+        <span class="nf">property</span><span class="p">(</span><span class="s">"sonar.links.scm"</span><span class="p">,</span> <span class="n">github_project_url</span><span class="p">)</span>
+        <span class="nf">property</span><span class="p">(</span><span class="s">"sonar.links.issue"</span><span class="p">,</span> <span class="s">"$github_project_url/issues"</span><span class="p">)</span>
+        <span class="nf">property</span><span class="p">(</span><span class="s">"sonar.coverage.jacoco.xmlReportPaths"</span><span class="p">,</span> <span class="n">buildDir</span><span class="p">.</span><span class="nf">resolve</span><span class="p">(</span><span class="s">"reports/jacoco/aggregateJacocoTestReport/aggregateJacocoTestReport.xml"</span><span class="p">))</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To be able to fetch additional sub-module specific data (detekt) for sonarqube, in each sub-module additional configuration is
+required.</p>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org.javafreedom.kotlin-common-conventions.gradle.kts">org.javafreedom.kotlin-common-conventions.gradle.kts</a></div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="nf">detekt</span> <span class="p">{</span>
+    <span class="n">buildUponDefaultConfig</span> <span class="p">=</span> <span class="k">false</span>
+    <span class="n">ignoreFailures</span> <span class="p">=</span> <span class="k">true</span>
+
+    <span class="nf">reports</span> <span class="p">{</span>
+        <span class="n">html</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">true</span>
+        <span class="n">xml</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">true</span>
+        <span class="n">txt</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">false</span>
+        <span class="n">sarif</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">false</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="add-documentation-with-asciidoc">add documentation with asciidoc</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Each project requires some documentation. This project uses asciidoc as the documentation source-language. Each documentation
+is added in the new documentation sub-module, which is added to the settings.gradle.kts.</p>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://github.com/triplem/gradle-by-example/blob/main/settings.gradle.kts">settings.gradle.kts</a></div>
+<div class="content">
+<pre>includeProject(file("documentation"))</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="publish-packages">publish packages</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="package-docker-container">package docker container</h2>
+<div class="sectionbody">
+
 </div>
 </div>
 <div class="sect1">
@@ -838,13 +992,22 @@ to fulfill all needs.</p>
 If you do have larger projects, it could make sense to use own plugins to provide this funtionality, but for small to mid-size projects this approach seems to be
 a best fit.</p>
 </div>
+<div class="paragraph">
+<p>There is still place for improvemnt. The move from jcenter to maven central is quite important, but depends on kotlinx-html. Also some
+configurations are still way to inter-mingled and should get refactored to be able to make the whole config more maintainable (eg.
+the dokkaMultiModuleTask is referenced in several places).</p>
+</div>
+<div class="paragraph">
+<p>It is not planned to provide a full-blown plugin concept for this kind of configuration, if you would like to try out some
+quite opinonated plugin which provides nearly all of the above configuration, please try <a href="https://kordamp.org/kordamp-gradle-plugins/">kordamp.org</a>.</p>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.0.0<br>
-Last updated 2021-03-04 21:49:25 UTC
+Version 1.0.1<br>
+Last updated 2021-03-09 21:02:13 UTC
 </div>
 </div>
 <style>
