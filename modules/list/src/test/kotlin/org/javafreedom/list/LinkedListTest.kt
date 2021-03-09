@@ -5,7 +5,10 @@ package org.javafreedom.list
 
 import assertk.assertThat
 import assertk.assertions.*
+import mu.KotlinLogging
 import kotlin.test.Test
+
+private val logger = KotlinLogging.logger {}
 
 class LinkedListTest {
 
@@ -16,6 +19,8 @@ class LinkedListTest {
 
     @Test fun testAdd() {
         val list = LinkedList()
+
+        logger.debug { "Just a test for log messages" }
 
         list.add("one")
         assertThat(list.size()).isEqualTo(1)

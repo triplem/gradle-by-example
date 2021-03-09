@@ -9,7 +9,7 @@ plugins {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 val revDate = System.getenv()["revdate"] ?: LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
