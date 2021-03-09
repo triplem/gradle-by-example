@@ -37,8 +37,6 @@ subprojects {
         sonarTestSources.add("src/testIntegration")
         sonarTestSources.add("src/test")
         val testDirs = sonarTestSources.filter { this.project.projectDir.resolve(it).exists() }.joinToString()
-
-        println("project: ${project.name} - $testDirs")
     }
 
     if (this.name != "documentation") {
