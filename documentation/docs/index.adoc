@@ -337,9 +337,61 @@ an up-to-date status.
 
 == add sonarqube
 
-== add asciidoc
+https://www.sonarqube.org/[Sonarqube] is a Static Code Quality tool and offers a free instance or open-source projects on
+https://sonarcloud.io/[sonarcloud.io]. To be able to use this, some configuration is necessary. This configuration uses
+some (eg. jacoco as well as detekt) of the previously described configurations.
 
-== add documentation
+.https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/verification/sonarqube-conventions.gradle.kts[sonarqube-conventions.gradle.kts]
+[source,kotlin]
+----
+sonarqube {
+    properties {
+        // See https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle#AnalyzingwithSonarQubeScannerforGradle-Configureanalysisproperties
+        property("sonar.sourceEncoding", "UTF-8")
+        property("sonar.projectName", rootProject.name)
+        property("sonar.projectKey", System.getenv()["SONAR_PROJECT_KEY"] ?: rootProject.name)
+        property("sonar.organization", System.getenv()["SONAR_ORGANIZATION"] ?: github_org)
+        property("sonar.projectVersion", rootProject.version.toString())
+        property("sonar.host.url", System.getenv()["SONAR_HOST_URL"] ?: "https://sonarcloud.io")
+        property("sonar.login", System.getenv()["SONAR_TOKEN"] ?: "" )
+        property("sonar.scm.provider", "git")
+        property("sonar.links.homepage", github_project_url)
+        property("sonar.links.ci", "$github_project_url/actions")
+        property("sonar.links.scm", github_project_url)
+        property("sonar.links.issue", "$github_project_url/issues")
+        property("sonar.coverage.jacoco.xmlReportPaths", buildDir.resolve("reports/jacoco/aggregateJacocoTestReport/aggregateJacocoTestReport.xml"))
+    }
+}
+----
+
+To be able to fetch additional sub-module specific data (detekt) for sonarqube, in each sub-module additional configuration is
+required.
+
+.https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org.javafreedom.kotlin-common-conventions.gradle.kts[org.javafreedom.kotlin-common-conventions.gradle.kts]
+[source,kotlin]
+----
+detekt {
+    buildUponDefaultConfig = false
+    ignoreFailures = true
+
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        txt.enabled = false
+        sarif.enabled = false
+    }
+}
+----
+
+== add documentation with asciidoc
+
+Each project requires some documentation. This project uses asciidoc as the documentation source-language. Each documentation
+is added in the new documentation sub-module, which is added to the settings.gradle.kts.
+
+.https://github.com/triplem/gradle-by-example/blob/main/settings.gradle.kts[settings.gradle.kts]
+----
+includeProject(file("documentation"))
+----
 
 == publish packages
 
