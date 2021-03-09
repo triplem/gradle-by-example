@@ -13,19 +13,20 @@ In this article I would like to show how to establish a gradle multi-module proj
 whole wide dustbin (uh, www was the correct abbreviation) gives you several solutions and some (if not most) of them are based on older
 versions of gradle and/or are written in groovy, but I want to use only the kotlin DSL.
 
-Since I am currently working on a small project, I am using examples from this pure kotlin project. Kotlin has some specifics in the configuration
-of gradle as well. One of those is the "internal" visiblity modifier. Classes and/or methods marked with this modifier are not visible outside
+Kotlin has some specifics in the configuration of gradle. One of those is the "internal" visiblity modifier. Classes and/or methods marked with this modifier are not visible outside
 of the current module additionally to the test-module. See https://kotlinlang.org/docs/reference/visibility-modifiers.html#modules[kotlin Visibility Modifiers - Modules]
 for further information about the definiton of modules. Due to the fact, that we do want to have integration tests using "internal" methods,
-we need some additional configuration, which is shown in the following as well.
+we need some additional configuration, which is shown in this article as well.
 
-Basically additional to a small project provided by the `gradle init` action, we are going to add some useful tasks, which are necessary in most
+Additionally to the small project provided by the `gradle init` action, we are going to add some useful tasks, which are necessary in most
 mid-size and larger projects:
 
 * Integration Tests
 * Dokka Pages as well as an aggregation of those
 * Jacoco Reports (inclusive an aggregated report for all sub-projects)
 * Sonarqube Reporting
+* OWASP Dependency Check
+* Asciidoctor Documentation
 
 In another article I am going to explain on how to release such a project using semantic versioning and github-actions using the above mentioned
 steps/tasks.
@@ -37,27 +38,25 @@ as well.
 == Install gradle and initialize project
 
 Like already mentioned, we are going to start with `gradle init` to generate a small multi-module project. Unfortunately, even though we are going
-to use the gradle wrapper in out project, gradle forces us to install gradle itself, to initialize a project. Therefor your first step is to install
+to use the gradle wrapper in out project, gradle forces us to install gradle itself, to initialize a project. Therefore the first step is to install
 gradle on your local machine. This can be done via your local package manager (Yum, Pacman, Homebrew, Chocolatey, ...) or manually via
 https://gradle.org/install/[Gradle Install].
 
-So, after installing gradle, we are going to create a first small project via the beforementioned `gradle init`. We are going to use the following
-additional command-line parameters, which are shortly explained as well. For a full description of those parameters please refer to
-https://docs.gradle.org/current/userguide/build_init_plugin.html[Gradle Build Init Plugin].
+After installing gradle, we are going to create a first small project via
 
-The project is available on https://github.com/triplem/someproject[github], and the result of each step is put into its own branch.
+`gradle init --type kotlin-application --dsl kotlin --split-project --project-name gradle-by-example --package org.javafreedom`
 
-`gradle init --type kotlin-application --dsl kotlin --split-project --project-name article --package org.javafreedom`
+For a full description of those parameters please refer to https://docs.gradle.org/current/userguide/build_init_plugin.html[Gradle Build Init Plugin].
 
-This will setup a small project with the type `kotlin-application`, which contains all required components for a kotlin command-line application. Furthermore
-we are going to have some provided sub-modules (`split-project`). The project-name is usually taken from the name of the directory. To be able to be
-independent of the current directory, we do provide the project-name. The used package is the one used for this example project (`org.javafreedom`). All
-of those values can be adopted to your personal taste, obviously. The used dsl is kotlin, which will provide us with *.gradle.kts files instead of the groovy
-*.gradle files.
+The above command-line will setup a small project with the type `kotlin-application`, which contains all required components for a kotlin command-line
+application. Some sub-modules are generated via the `split-project` parameter. The project-name is usually taken from the name of the directory. To be able to be
+independent of the current directory, we do provide the project-name (`project-name`). The used package is the one used for this example project
+(`package org.javafreedom`). All of those values can be adopted to your personal taste, obviously. The used dsl is kotlin, which will provide us
+with *.gradle.kts files instead of the default groovy *.gradle files.
 
-Since we are using the projec-type kotlin-application, the pre-configured test-framework is kotlin.test and, quite obviously, the used language is kotlin.
+Since we are using the project-type kotlin-application, the pre-configured test-framework is kotlin.test and, quite obviously, the used language is kotlin.
 
-The following project structure is then generated by the `gradle init`-command:
+The following project structure is generated by the `gradle init`-command:
 
 image::project-structure-init.png[Project Structure after initilization]
 
@@ -66,25 +65,27 @@ to be able to fulfill our use-case.
 
 After intializing the project, a first `gradlew tasks` will show a list of all available tasks.
 
-All those changes can also be viewed on https://github.com/triplem/someproject[github]
-
 == change directory structure
 
-I wanted to have all sub-modules gathered in the directory `modules` and therefor all sub-modules (list, ...) are moved to this folder. To be able to discover those
-modules automatically, the settings.gradle.kts is adopted slightly.
+All sub-modules should be gathered in the directory `modules` and therefore all sub-modules (list, ...) are moved to this folder.
+To be able to discover those modules automatically, the settings.gradle.kts is adopted slightly.
 
-.settings.gradle.kts
+.https://github.com/triplem/gradle-by-example/blob/main/settings.gradle.kts[settings.gradle.kts]
 [source,kotlin]
 ----
+fun includeProject(dir: File) {
+    include(dir.name)
+    val prj = project(":${dir.name}")
+    prj.projectDir = dir
+    prj.buildFileName = "${dir.name}.gradle.kts"
+    require(prj.projectDir.isDirectory) { "Project '${prj.path} must have a ${prj.projectDir} directory" }
+    require(prj.buildFile.isFile) { "Project '${prj.path} must have a ${prj.buildFile} build script" }
+}
+
 fun includeProjectsInDir(dirName: String) {
     file(dirName).listFilesOrdered { it.isDirectory }
         .forEach { dir ->
-            include(dir.name)
-            val prj = project(":${dir.name}")
-            prj.projectDir = dir
-            prj.buildFileName = "${dir.name}.gradle.kts"
-            require(prj.projectDir.isDirectory) { "Project '${prj.path} must have a ${prj.projectDir} directory" }
-            require(prj.buildFile.isFile) { "Project '${prj.path} must have a ${prj.buildFile} build script" }
+            includeProject(dir)
         }
 }
 
@@ -92,17 +93,17 @@ includeProjectsInDir("modules")
 ----
 
 The above code will basically list all sub-directories of the given directory (modules in this case), and add those directories to the childprojects of the current
-project (which is the root). This is rather generic and adds the possiblity of easily add additional modules (even in different parent-direcotries) like eg. a documentation module.
+project (which is the root project). This is rather generic and adds the possiblity of easily add additional modules (even in different parent-direcotries) like eg. a documentation module.
 Each project contains an own `.gradle.kts` file, which is named like the containing folder.
 
-image::project-structure-modules-added.png[Project structure with modules added]
+Please note, that the above mentioned functions are splitted, so that in a later phase we are able to add additional projects in a different directory (documentation).
 
-All those changes can also be viewed on https://github.com/triplem/someproject[github]
+image::project-structure-modules-added.png[Project structure with modules added]
 
 == add additional "useful" dependencies
 
 To be able to write tests, useful logging and other stuff, we do need to provide additional dependencies. Some of those dependencies (like logging) are required
-in all sub-modules and we do declare those in a central space, the convention.
+in all sub-modules, so we do declare those in a central space, the convention.
 
 I decided to add the following default dependencies for all kotlin sub-modules:
 
@@ -110,14 +111,12 @@ I decided to add the following default dependencies for all kotlin sub-modules:
 * https://github.com/willowtreeapps/assertk[assertk] for Assertions in Tests
 * https://kotlinlang.org/api/latest/kotlin.test/[kotlin.test] for Tests
 
-The common-convention is now containing all the above mentioned additional dependencies. To show off, that those dependencies are
-added to the modules, inside the list-module the Class LinkedListTest was renamed to MutableListTest and contains now statements
-from those dependencies.
+The common-convention contains now all the above mentioned additional dependencies. To show off, that those dependencies are
+added to the modules, inside the list-module the Class LinkedListTest contains now statements from those dependencies.
 
-The following code snippet show the additions to the org.javafreedom.kotlin-common-conventions.gradle.kts.
+The following code snippet shows the additions to the org.javafreedom.kotlin-common-conventions.gradle.kts.
 
-
-.org.javafreedom.kotlin-common-conventions.gradle.kts
+.https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org.javafreedom.kotlin-common-conventions.gradle.kts[org.javafreedom.kotlin-common-conventions.gradle.kts]
 [source,kotlin]
 ----
 // Add additonal dependencies useful for development
@@ -127,17 +126,17 @@ testImplementation(kotlin("test"))
 testImplementation(kotlin("test-junit5"))
 ----
 
-All those changes can also be viewed on https://github.com/triplem/someproject?branch=dependencies[github]
-
 == add Dokka generation
 
-In kotlin, the documentation of classes and methods are generated using dokka (similar to javadoc). This documentation should be generated and aggregated in
-a common place, so that deverlopers can refer to it. Usually dokka is generated for each sub-module, but not aggregated.
+In kotlin, the documentation of classes and methods are generated using dokka (similar to javadoc). This documentation should be generated and
+aggregated in a common place, so that developers can refer to it. Usually dokka is generated for each sub-module, but not aggregated.
+Unfortunately the https://github.com/Kotlin/dokka[dokka plugin] is https://github.com/Kotlin/dokka/issues/1752[not following the gradle idiomatic way],
+so the plugin needs to get handled in a different manner.
 
-The https://github.com/Kotlin/dokka[dokka plugin] can be found in the jcenter Repository and not, like other plugins, in the gradlePluginPortal(). That means,
+The Plugin can be found in the jcenter Repository and not, like other plugins, in the gradlePluginPortal(). That means,
 that we do need to add this repository to the settings.gradle.kts.
 
-.settings.gradle.kts
+.https://github.com/triplem/gradle-by-example/blob/main/settings.gradle.kts[settings.gradle.kts]
 [source,kotlin]
 ----
 pluginManagement {
@@ -149,23 +148,23 @@ pluginManagement {
 ----
 
 It is quite important to add the classpath of this plugin to the buildSrc/build.gradle.kts, to be able to provide a version, which cannot be done
-in the conventions-script itself.
+in the conventions-script itself. To be able to use a later kotlin-version (in this project, we are going to use 1.4.30), the transitive dependency
+on the kotlin stdlib is excluded from the dokka plugin.
 
-.buildSrc/build.gradle.kts
+.https://github.com/triplem/gradle-by-example/blob/main/buildSrc/build.gradle.kts[buildSrc/build.gradle.kts]
 [source,kotlin]
 ----
-implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.4.20")
+implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.4.20") {
+    exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk8")
+}
 ----
 
-In the convention the plugin can then be used. We also modified the kotlin-jvm plugin to use the DependencyHandler-Extension `kotlin` to make the
-statement slightly more readable.
+The dokka plugin is then added to the Common-Convention to be able to use this plugin in each kotlin module.
 
-.org.javafreedom.kotlin-common-conventions.gradle.kts
+.https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org.javafreedom.kotlin-common-conventions.gradle.kts[org.javafreedom.kotlin-common-conventions.gradle.kts]
 [source,kotlin]
 ----
 plugins {
-    // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    kotlin("jvm")
     id("org.jetbrains.dokka")
 }
 ----
@@ -176,7 +175,7 @@ LinkedList-Class. The documentation is then generated in the build/dokka/html-Fo
 To be able to aggregate the dokka-generated Documentation, we do need to add a new build.gradle.kts in the root-folder of the project. In this
 file the dokkaHtmlMultiModule-Task is declared.
 
-.build.gradle.kts
+.https://github.com/triplem/gradle-by-example/blob/main/build.gradle.kts[build.gradle.kts]
 [source,kotlin]
 ----
 plugins {
@@ -192,11 +191,13 @@ tasks.dokkaHtmlMultiModule.configure {
 }
 ----
 
-It is quite important to set the repoositories, because the dokka plugin tries to load some dependencies from this repository. By calling
+It is quite important to add the `jcenter()`-repository, because the dokka plugin tries to load some dependencies from this repository. By calling
 the task `dokkaHtmlMultiModule` the dokka-Documentation of all modules is build and then aggregated in the `build/dokkaCustomMultiModuleOutput`
 directory.
 
-This step adds the following tasks to the project. Please not especially the *MultiModule-Tasks, which do use the above
+WARNING: jcenter will be removed, and we do need to use mavencentral in the future. Please see https://github.com/triplem/gradle-by-example/issues/1[#1].
+
+This step adds the following tasks to the project. Note especially the *MultiModule-Tasks, which uses the above
 mentioned configuration.
 
 [source,bash]
@@ -217,74 +218,132 @@ dokkaJekyllMultiModule - Runs all subprojects 'dokkaJekyll' tasks and generates 
 javadoc - Generates Javadoc API documentation for the main source code.
 ----
 
-All those changes can also be viewed on https://github.com/triplem/someproject?branch=dokka[github]
-
 == add Integration Tests
 
-In this step, we are going to add the `integrationTest`-Task and the associated SourceSet (named testIntegration) to the proejct. Like already mentioned,
-we are going to use conventions. To be able to show some nuts and bolts, we are also adding some additonal classes, so that we can show, that this task can
-also use classes marked with the `internal` visibility modifier.
+In this step, we are going to add the `integrationTest`-Task and the associated SourceSet (named testIntegration) to the proejct.
+Like already mentioned, we are going to use conventions. To be able to show some nuts and bolts, we are also adding some additional
+classes, so that we can show, that this task can also use classes marked with the `internal` visibility modifier.
 
-The https://docs.gradle.org/current/samples/sample_jvm_multi_project_with_additional_test_types.html[gradle Manual] offered quite some help here. For a better
-readability of the project structure (meaning: for a better sorting of folders in the project structure), the 'integrationTest' sourceSet is renamed to
-'testIntegration'. This will show the testIntegration-Source-directory after the test-folder, which will make the structure clearer IMHO.
+The https://docs.gradle.org/current/samples/sample_jvm_multi_project_with_additional_test_types.html[gradle Manual] offered quite some
+help here. For a better readability of the project structure (meaning: for a better sorting of folders in the project structure), the
+'integrationTest' sourceSet is renamed to 'testIntegration'. This will show the testIntegration-Source-directory after the test-folder,
+which will make the structure clearer IMHO.
 
-To get rid of an "Overload resolution ambiquity"-Message, the following statement is added. This makes sure, that the sourceSets are of the correct type
-and the ambiguity is resolved.
+To keep the project maintainable, the configuration of the Integration Tests is kept in two files, one referenced from the sub-modules,
+which are the producers of the configuration, and one for the consumer, which is the root-project. Those files are referenced in the
+corresponding conventions accordingly.
 
-.org.javafreedom.kotlin-common-conventions.gradle.kts
+The file https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/verification/test-producer-conventions.gradle.kts[test-producer-conventions.gradle.kts]
+contains the configuration of the sourceset and the task. The visibility of the `internal` modifier is provided using the following
+statement:
+
+.https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/verification/test-producer-conventions.gradle.kts[test-producer-conventions.gradle.kts]
 [source,kotlin]
 ----
-// to get rid of "Overload resolution ambiguity"-messsage
-val sourcesets = project.extensions.getByType(SourceSetContainer::class)
-val testIntegration by sourcesets.creating
-----
-
-One additional step is required to be able to use `internal` classes in the tests.
-
-.org.javafreedom.kotlin-common-conventions.gradle.kts
-[source,kotlin]
-----
-val koTarget = kotlin.target as KotlinTarget
-koTarget.compilations.getByName("testIntegration") {
-    associateWith(target.compilations.getByName("main"))
+val koTarget: KotlinTarget = kotlin.target
+koTarget.compilations.named("testIntegration") {
+    associateWith(target.compilations.named("main").get())
 }
 ----
 
-Unfortunately, IntelliJ does not seem to recognize this association, and therefor these classes cannot get automatically resolved in the
-Editor. This seems to be a known issue, which is currently worked on (see their https://youtrack.jetbrains.com/issue/KT-17659[Bug-Tracker]
-for this).
+According to the https://youtrack.jetbrains.com/issue/KT-34102[YouTrack-Issue KT-34102] IntelliJ IDEA is right now not able
+to recognize the above configuration. Therefore the InternalDummyClassTest in the testIntegration-Sourceset shows an error in IntelliJ,
+but compiles cleanly using gradle.
 
-Additionally this steps provides a task to aggregate the test-reports of all sub-modules. This is heavily based on
+The consumer part of the configuration can be found in the file https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/verification/test-consumer-conventions.gradle.kts[test-consumer-conventions.gradle.kts].
+This configuration consumes the `test-report-date`, which is produced via the former configuration by all submodules, and aggregates the
+test-reports. This is then done using the task `testReport` and is heavily based on
 https://docs.gradle.org/current/userguide/java_testing.html#test_reporting[gradle Test-Reporting].
 
-Just one line needs to get added to the "binaryTestResultElements"-Configuration, to be able to aggregate the testIntegration-Reports
+Just one line needs to get added to the "binaryTestResultElements"-Configuration (aka test-report-data), to be able to aggregate the testIntegration-Reports
 as well.
 
-.org.javafreedom.kotlin-common-conventions.gradle.kts
+.https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/verification/test-producer-conventions.gradle.kts[test-producer-conventions.gradle.kts]
 [source,kotlin]
 ----
 outgoing.artifact(testIntegrationTask.map { task -> task.getBinaryResultsDirectory().get() })
 ----
 
-This step adds the following tasks to the project
-
-[source,bash]
-----
-Verification tasks
-
-integrationTest - Runs integration tests.
-----
-
-On running the `integrationTest`-Task on the project, all Integration-Test are run and a report is generated in the build/reports/allTests-Folder
+On running the `check`-Task on the project, all Integration-Test are run, and a report is generated in the build/reports/allTests-Folder
 which does contain the results of all Tests in the project.
-
-All those changes can also be viewed on https://github.com/triplem/someproject?branch=dokka[github]
 
 == add Jacoco
 
-Like the dokka documentation, the jacccoco Reports are generated per sub-module, and are then going to get aggregated in the root of the project. We do need to add
-the Report generation, as well as the report aggregation into our small project.
+To get one of the most used metrics in Software development (Coverage), we do need to add jacoco to the project.
+
+Like the dokka documentation, the jacccoco Reports are generated per sub-module, and are then aggregated in the root of the project.
+We do need to add the Report generation, as well as the report aggregation into our small project. This is done using the conventions
+https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/verification/jacoco-producer-conventions.gradle.kts[jacoco-producer]
+and https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/verification/jacoco-consumer-conventions.gradle.kts[jacoco-consumer].
+
+The aggregation of the report uses the same approach as the test-reports. The aggregation then produces both xml and html-reports to be
+able to use the reports in the Documentation as well as in the Sonarqube reporting.
+
+== add detekt
+
+https://detekt.github.io/detekt/[detekt] is a kotlin specific code-analysis tool and can also be integrated into the sonarqube reports.
+
+The following configuration is added to each sub-module and generates the detekt report for those.
+
+.https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org.javafreedom.kotlin-common-conventions.gradle.kts[kotlin-common-conventions.gradle.kts]
+[source,kotlin]
+----
+detekt {
+    buildUponDefaultConfig = false
+    ignoreFailures = true
+
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        txt.enabled = false
+        sarif.enabled = false
+    }
+}
+----
+
+Since the generated results should get aggregated as well, we do need to add some configuration into the
+root-project. This is done by using the aggregation-convention.
+
+.https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org.javafreedom.aggregation-conventions.gradle.kts[org.javafreedom.aggregation-conventions.gradle.kts]
+[source,kotlin]
+----
+val aggregateDetektTask = tasks.register<Detekt>("aggregateDetekt") {
+    buildUponDefaultConfig = false
+    ignoreFailures = true
+
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        txt.enabled = false
+        sarif.enabled = false
+    }
+
+    source(
+        subprojects.flatMap { subproject ->
+            subproject.tasks.filterIsInstance<Detekt>().map { task ->
+                task.source
+            }
+        }
+    )
+}
+----
+
+Please note, that the aggregation is really a full reporting for all sub-modules. Right now, it is not
+possible to generate an aggregation based on the results of each sub-module (see https://github.com/detekt/detekt/discussions/3483[detekt github disucssion]).
+
+Furthermore, detekt uses the kotlinx-html dependency, which is still located on jcenter. This makes it impossible to
+move away from jcenter, which is necessary, since jcenter is in sunset phase. See https://github.com/Kotlin/kotlinx.html/issues/173[kotlinx.html#173] for
+an up-to-date status.
+
+== add sonarqube
+
+== add asciidoc
+
+== add documentation
+
+== publish packages
+
+== package docker container
 
 == Conclusion
 
@@ -296,3 +355,10 @@ to fulfill all needs.
 The buildSrc-Conventions do offer a great deal of flexibility but still provide some best-practices to a software project. My recommendation is to use this toolset.
 If you do have larger projects, it could make sense to use own plugins to provide this funtionality, but for small to mid-size projects this approach seems to be
 a best fit.
+
+There is still place for improvemnt. The move from jcenter to maven central is quite important, but depends on kotlinx-html. Also some
+configurations are still way to inter-mingled and should get refactored to be able to make the whole config more maintainable (eg.
+the dokkaMultiModuleTask is referenced in several places).
+
+It is not planned to provide a full-blown plugin concept for this kind of configuration, if you would like to try out some
+quite opinonated plugin which provides nearly all of the above configuration, please try https://kordamp.org/kordamp-gradle-plugins/[kordamp.org].
