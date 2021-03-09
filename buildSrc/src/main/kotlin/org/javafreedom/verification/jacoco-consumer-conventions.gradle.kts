@@ -54,7 +54,9 @@ val coverageClassPath: Configuration by configurations.creating {
 val aggregateJacocoTestReport by tasks.registering(JacocoReport::class) {
     additionalClassDirs(coverageClassPath.incoming.artifactView { lenient(true) }.files)
     additionalSourceDirs(sourcesPath.incoming.artifactView { lenient(true) }.files)
-    executionData(coverageDataPath.incoming.artifactView { lenient(true) }.files.filter { it.exists() })
+    executionData(coverageDataPath.incoming.artifactView { lenient(true) }
+        .files.filter { it.exists() }
+        .filter { it.extension == "exec" })
 
     reports {
         // xml is usually used to integrate code coverage with
