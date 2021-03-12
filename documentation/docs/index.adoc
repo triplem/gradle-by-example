@@ -98,6 +98,9 @@ Each project contains an own `.gradle.kts` file, which is named like the contain
 
 Please note, that the above mentioned functions are splitted, so that in a later phase we are able to add additional projects in a different directory (documentation).
 
+Each sub-module should contain very little gradle configurations. Only module specifics, like eg. dependencies, should be included in there. All common
+tasks and configurations should therefor be defined in the convention files and/or dependencies of those.
+
 image::project-structure-modules-added.png[Project structure with modules added]
 
 == add additional "useful" dependencies
@@ -367,35 +370,41 @@ sonarqube {
 To be able to fetch additional sub-module specific data (detekt) for sonarqube, in each sub-module additional configuration is
 required.
 
-.https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org.javafreedom.kotlin-common-conventions.gradle.kts[org.javafreedom.kotlin-common-conventions.gradle.kts]
-[source,kotlin]
-----
-detekt {
-    buildUponDefaultConfig = false
-    ignoreFailures = true
-
-    reports {
-        html.enabled = true
-        xml.enabled = true
-        txt.enabled = false
-        sarif.enabled = false
-    }
-}
-----
-
 == add documentation with asciidoc
 
 Each project requires some documentation. This project uses asciidoc as the documentation source-language. Each documentation
 is added in the new documentation sub-module, which is added to the settings.gradle.kts.
 
 .https://github.com/triplem/gradle-by-example/blob/main/settings.gradle.kts[settings.gradle.kts]
+[source,kotlin]
 ----
 includeProject(file("documentation"))
 ----
 
+To configure asciidoc a new producer convention is added
+(https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/documentation/asciidoc-producer-conventions.gradle.kts[asciidoc-producer-conventions.gradle.kts]).
+To be able to reference the current Revision Date and Number, some System-Environment-Variables are defined in this file.
+
+.https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/documentation/asciidoc-producer-conventions.gradle.kts[asciidoc-producer-conventions.gradle.kts]
+[source,kotlin]
+----
+val revDate = System.getenv()["revdate"] ?: LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+val revNumber = System.getenv()["revnumber"] ?: "DEV-Version"
+----
+
 == publish packages
 
+The produced JAR-files are published during a release-process (documentated in a separate article) using github-actions.
+This is, because of the nature of this project, rather unnecessary, but to be able to show this process it is done anyways.
+
+The packages are published to the github Repository using the maven-publishing plugin and is defined in
+https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/documentation/asciidoc-producer-conventions.gradle.kts[maven-publish-conventions.gradle.kts].
+
+The published packages include the produced JAR-files as well as the Sources-JAR-files.
+
 == package docker container
+
+
 
 == Conclusion
 
