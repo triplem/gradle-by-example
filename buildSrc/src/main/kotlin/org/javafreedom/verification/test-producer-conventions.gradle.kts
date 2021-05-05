@@ -38,8 +38,6 @@ val integrationTestTask = tasks.register<Test>("integrationTest") {
     testClassesDirs = testIntegration.output.classesDirs
     classpath = configurations[testIntegration.runtimeClasspathConfigurationName] + testIntegration.output
 
-    useJUnitPlatform()
-
     shouldRunAfter(tasks.test)
 }
 
