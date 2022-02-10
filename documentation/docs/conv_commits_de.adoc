@@ -1,6 +1,6 @@
 = Semantic Release für gradle Projekte
 
-:imagesdir: ../resources/
+:imagesdir: resources/
 ifdef::env-github[]
 :tip-caption: :bulb:
 :note-caption: :information_source:
