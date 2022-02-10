@@ -1,0 +1,110 @@
+= Semantic Release für gradle Projekte
+
+:imagesdir: ../resources/
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+Bereits 1997 hat Eric S. Raymond in seinem Essay "link:https://de.wikipedia.org/wiki/Die_Kathedrale_und_der_Basar[Die Kathedrale und der Basar]" den Leitsatz "Release early, release often" geprägt.
+Mit dem DevOps-Paradigma ist das Continuous Delivery Konzept, das eben diesem Leitsatz folgt, aktueller den je.
+In der aktuellen Software-Entwicklung geht es also auch darum, Releases reibungslos erstellen zu können.
+Damit dies funktioniert, muss der Erstellungs-Prozess für ein Release einfach, reproduzierbar und automatisiert sein.
+
+Um Releases ein-eindeutig identifizeren und referenzieren zu können, wird eine Namensgebung für Versionen benötigt.
+Dazu hat sich das link:https://semver.org/[Semantic Versioning] durchgesetzt.
+Semantic Versioning definiert, wie eine Versionnummer aufgebaut und inkrementiert wird.
+
+Durch die Verwendung von link:https://www.conventionalcommits.org/[Conventional Commits] können Entwickler mit Commit-Messages angeben, welcher Teil einer Version inkrementiert werden soll.
+Dies bietet den Vorteil, das Änderungen am Code direkt dokumentiert werden und in dem Changelog eines Projektes dann automatisch aufgelistet werden können.
+Die Spezifikation enthält Vorgaben, wie die Commit-Messages angelegt werden müssen.
+
+Einige Schlüssel-Begriffe der Conventional-Commits sind:
+
+* fix
+* feat
+* BREAKING CHANGE
+
+Mit diesen Präfixes in den Commit Messages wird entschieden, welcher Teil einer Versionsnummer inkrementiert wird.
+Somit können dann, im Rahmen des Continouus Deployment-Strategie, Builds automatisch gestartet und mit der daraus gewonnenen Versionnummer publiziert werden.
+
+Um den Release Prozess mit den vorgenannten Spezifikationen zu automatisieren, gibt es im Javascript-Bereich das
+link:https://semantic-release.gitbook.io/semantic-release/[Semantic Release] Toolset.
+Dieses Toolset ist zwar für Javascript gebaut und optimiert, kann jedoch auch in anderen Umgebungen eingesetzt werden.
+Hier möchte ich auf die Verwendung in einem Java-Projekt, das mit Gradle gebaut wird, eingehen.
+
+In gradle wird für das Publizieren von Artefakten das link:https://docs.gradle.org/current/userguide/publishing_ivy.html[Ivy Publish Plugin]
+oder das link:https://docs.gradle.org/current/userguide/publishing_maven.html[Maven Publish Plugin] verwenden.
+Im Prinzip arbeiten beide Plugins ähnlich und unterscheiden sich vor allem in den verwendeten Metadaten der Repositories.
+Im folgenden wird das Maven Plugin verwendet, da diese Repositories häufig anzutreffen sind.
+
+Für eine ein-eindeutige Identifikation der Artefakte werden in gradle die folgenden Properties benötigt:
+
+* groupId
+* artefactId
+* version
+
+Die Version wird hier von dem Semantic Release Toolset generiert und über die Kommandozeile an gradle übergeben.
+Um dies zu ermöglichen, darf das Version-Property nicht in der build.gradle definiert sein.
+In unserem Beispiel wird dieses Property gar nicht in gradle definiert, die Versionierung erfolgt ausschließlich über das Semantic Release, basierend auf den bereits gesetzten Tags und den Commit-Messages.
+
+Das Semantic Release Toolset verwendet die Datei .releaserc (andere Dateien bzw.
+Formate können link:https://semantic-release.gitbook.io/semantic-release/usage/configuration[hier]
+eingesehen werden) um den Prozess zu steuern.
+Beispielhaft kann das dann wie folgt aussehen:
+
+.releaserc
+[source,json]
+----
+{
+    "branches": ["master"],
+    "plugins": [
+        "@semantic-release/commit-analyzer",
+        "@semantic-release/release-notes-generator",
+        ["@semantic-release/github", {
+            "assets": [
+                {"path": "../../build/distributions/kcd.tar",
+                 "label": "Assembly - Tar ${nextRelease.version}"},
+                {"path": "../../build/distributions/kcd.zip",
+                 "label": "Assembly - Zip ${nextRelease.version}"},
+                {"path": "../../build/libs/kcd-*.jar",
+                 "label": "Release Jar ${nextRelease.version}"},
+                {"path": "../../build/libs/kcd-*-sources.jar",
+                 "label": "Release SourceJar ${nextRelease.version}"}
+            ]
+        }],
+        ["@semantic-release/exec", {
+          "prepareCmd" : "./release-files.sh ${nextRelease.version}"
+        }]
+    ]
+}
+----
+
+In der oben aufgeführten Konfiguration sind einige Plugins des Semantic Release Toolset konfiguriert.
+Hervorzuheben sind das link:https://github.com/semantic-release/github[github-Plugin] und das link:https://github.com/semantic-release/exec[exec-Plugin].
+
+Das exec-Plugin ruft in der Konfiguration in der "prepare"-Phase das Skript release-files.sh mit der erzeugten Versionsnummer auf.
+In diesem Skript wird der link:https://docs.gradle.org/current/userguide/publishing_maven.html[publish-Task] von gradle mit der übergebenen Versionsnummer aufgerufen und somit die in der gradle.build.kts angegebenen Artefakte versioniert und dann publiziert.
+
+.release-files.sh
+[source,bash]
+----
+#!/usr/bin/env sh
+cd ../..
+./gradlew -Pversion=$1 publish
+----
+
+Über das github-Plugin werden durch gradle erzeugte Artefakte an das github-Release gehängt.
+Die angegebenen Dateien können dann über den Release-Tab des github-Projekts eingesehen werden.
+
+image::releases.png[Releases]
+
+Um das Semantic Release in einem gradle-basierten Prozess nutzen zu können, muss zuerst npm installiert werden.
+Weiterhin muss damit dann das Semantic Release und Plugins installiert werden.
+Dies kann über `npm install conventional-changelog-conventionalcommits @semantic-release/exec`
+passieren.
+Mit `npx`, einer Laufzeitumgebung für Node Pakete, kann das Release über den Befehl `npx semantic-release`
+erzeugt werden.
