@@ -1,24 +1,3 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
-  <suppress>
-    <notes><![CDATA[
-      Suppress kotlin false-positives
-      ]]></notes>
-    <cve>CVE-2020-15824</cve>
-    <cve>CVE-2020-29582</cve>
-  </suppress>
-  <suppress>
-    <notes><![CDATA[
-      Suppress jackon-databind (used in detekt plugin 1.16.0-RC1
-      ]]></notes>
-    <cve>CVE-2017-15095</cve>
-    <cve>CVE-2018-14718</cve>
-    <cve>CVE-2018-7489</cve>
-    <cve>CVE-2019-14540</cve>
-    <cve>CVE-2019-14893</cve>
-    <cve>CVE-2019-16335</cve>
-    <cve>CVE-2019-17267</cve>
-    <cve>CVE-2020-10672</cve>
-    <cve>CVE-2020-10673</cve>
-  </suppress>
 </suppressions>
