@@ -440,8 +440,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>Build a multi-module project with gradle</h1>
 <div class="details">
-<span id="revnumber">version 1.0.1,</span>
-<span id="revdate">2021-03-09</span>
+<span id="revnumber">version 1.1.0,</span>
+<span id="revdate">2022-02-11</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -593,6 +593,10 @@ Each project contains an own <code>.gradle.kts</code> file, which is named like 
 </div>
 <div class="paragraph">
 <p>Please note, that the above mentioned functions are splitted, so that in a later phase we are able to add additional projects in a different directory (documentation).</p>
+</div>
+<div class="paragraph">
+<p>Each sub-module should contain very little gradle configurations. Only module specifics, like eg. dependencies, should be included in there. All common
+tasks and configurations should therefor be defined in the convention files and/or dependencies of those.</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -933,22 +937,6 @@ some (eg. jacoco as well as detekt) of the previously described configurations.<
 <p>To be able to fetch additional sub-module specific data (detekt) for sonarqube, in each sub-module additional configuration is
 required.</p>
 </div>
-<div class="listingblock">
-<div class="title"><a href="https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org.javafreedom.kotlin-common-conventions.gradle.kts">org.javafreedom.kotlin-common-conventions.gradle.kts</a></div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="kotlin"><span class="nf">detekt</span> <span class="p">{</span>
-    <span class="n">buildUponDefaultConfig</span> <span class="p">=</span> <span class="k">false</span>
-    <span class="n">ignoreFailures</span> <span class="p">=</span> <span class="k">true</span>
-
-    <span class="nf">reports</span> <span class="p">{</span>
-        <span class="n">html</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">true</span>
-        <span class="n">xml</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">true</span>
-        <span class="n">txt</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">false</span>
-        <span class="n">sarif</span><span class="p">.</span><span class="n">enabled</span> <span class="p">=</span> <span class="k">false</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</div>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -961,7 +949,19 @@ is added in the new documentation sub-module, which is added to the settings.gra
 <div class="listingblock">
 <div class="title"><a href="https://github.com/triplem/gradle-by-example/blob/main/settings.gradle.kts">settings.gradle.kts</a></div>
 <div class="content">
-<pre>includeProject(file("documentation"))</pre>
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="nf">includeProject</span><span class="p">(</span><span class="nf">file</span><span class="p">(</span><span class="s">"documentation"</span><span class="p">))</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To configure asciidoc a new producer convention is added
+(<a href="https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/documentation/asciidoc-producer-conventions.gradle.kts">asciidoc-producer-conventions.gradle.kts</a>).
+To be able to reference the current Revision Date and Number, some System-Environment-Variables are defined in this file.</p>
+</div>
+<div class="listingblock">
+<div class="title"><a href="https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/documentation/asciidoc-producer-conventions.gradle.kts">asciidoc-producer-conventions.gradle.kts</a></div>
+<div class="content">
+<pre class="rouge highlight"><code data-lang="kotlin"><span class="kd">val</span> <span class="py">revDate</span> <span class="p">=</span> <span class="nc">System</span><span class="p">.</span><span class="nf">getenv</span><span class="p">()[</span><span class="s">"revdate"</span><span class="p">]</span> <span class="o">?:</span> <span class="nc">LocalDateTime</span><span class="p">.</span><span class="nf">now</span><span class="p">().</span><span class="nf">format</span><span class="p">(</span><span class="nc">DateTimeFormatter</span><span class="p">.</span><span class="nf">ofPattern</span><span class="p">(</span><span class="s">"yyyy-MM-dd"</span><span class="p">))</span>
+<span class="kd">val</span> <span class="py">revNumber</span> <span class="p">=</span> <span class="nc">System</span><span class="p">.</span><span class="nf">getenv</span><span class="p">()[</span><span class="s">"revnumber"</span><span class="p">]</span> <span class="o">?:</span> <span class="s">"DEV-Version"</span></code></pre>
 </div>
 </div>
 </div>
@@ -969,7 +969,17 @@ is added in the new documentation sub-module, which is added to the settings.gra
 <div class="sect1">
 <h2 id="publish-packages">publish packages</h2>
 <div class="sectionbody">
-
+<div class="paragraph">
+<p>The produced JAR-files are published during a release-process (documentated in a separate article) using github-actions.
+This is, because of the nature of this project, rather unnecessary, but to be able to show this process it is done anyways.</p>
+</div>
+<div class="paragraph">
+<p>The packages are published to the github Repository using the maven-publishing plugin and is defined in
+<a href="https://github.com/triplem/gradle-by-example/blob/main/buildSrc/src/main/kotlin/org/javafreedom/documentation/asciidoc-producer-conventions.gradle.kts">maven-publish-conventions.gradle.kts</a>.</p>
+</div>
+<div class="paragraph">
+<p>The published packages include the produced JAR-files as well as the Sources-JAR-files.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1006,8 +1016,8 @@ quite opinonated plugin which provides nearly all of the above configuration, pl
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.0.1<br>
-Last updated 2021-03-09 21:02:13 UTC
+Version 1.1.0<br>
+Last updated 2022-02-11 21:03:06 UTC
 </div>
 </div>
 <style>
