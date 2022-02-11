@@ -84,7 +84,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 13
+          node-version: 16
       - name: Add plugin for conventional commits
         run: npm install conventional-changelog-conventionalcommits @semantic-release/exec
         working-directory: ./.github/workflows
