@@ -1,6 +1,5 @@
 package org.javafreedom.verification
 
-import io.gitlab.arturbosch.detekt.Detekt
 import org.sonarqube.gradle.SonarQubeTask
 
 plugins {

@@ -1,4 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.*
+import java.util.Properties
+
+val properties = Properties().also { props ->
+    project.projectDir.resolveSibling("../gradle.properties").bufferedReader().use {
+        props.load(it)
+    }
+}
+val junitVersion: String = properties.getProperty("junitVersion")
 
 plugins {
     java
@@ -52,14 +60,14 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     // Add additonal dependencies useful for development
-    implementation("io.github.microutils:kotlin-logging:2.0.4")
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.23")
+    implementation("io.github.microutils:kotlin-logging:2.1.21")
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit5"))
 
     // Use JUnit Jupiter API for testing.
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
 
     // Use JUnit Jupiter Engine for testing.
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 }

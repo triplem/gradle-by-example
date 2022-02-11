@@ -16,10 +16,10 @@ val aggregateDetektTask = tasks.register<Detekt>("aggregateDetekt") {
     ignoreFailures = true
 
     reports {
-        html.enabled = true
-        xml.enabled = true
-        txt.enabled = false
-        sarif.enabled = false
+        html.required
+        xml.required
+        txt.required.set(false)
+        sarif.required.set(false)
     }
 
     source(
@@ -67,4 +67,9 @@ dependencyCheck {
     formats = listOf(ReportGenerator.Format.HTML,
         ReportGenerator.Format.JUNIT, ReportGenerator.Format.XML)
     suppressionFile = "${rootProject.rootDir}/config/owasp/owasp-supression.xml"
+
+    // remove dokka depencencies (obviously just a javadoc kinda dependency)
+    scanConfigurations = configurations.names
+            .filter { n -> !n.startsWith("dokka") }
+            .toList()
 }
