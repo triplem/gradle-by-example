@@ -18,7 +18,7 @@ jobs:
           java-package: jdk
 
       - name: Setup Gradle and Compile
-        uses: gradle/gradle-build-action@2
+        uses: gradle/gradle-build-action@v2
         with:
           arguments: clean classes testClasses testIntegrationClasses
 
@@ -36,7 +36,7 @@ jobs:
           java-version: '11'
           java-package: jdk
       - name: Run tests
-        uses: gradle/gradle-build-action@2
+        uses: gradle/gradle-build-action@v2
         with:
           arguments: clean check sonarqube aggregateReports
         env:
@@ -63,7 +63,7 @@ jobs:
           java-version: '11'
           java-package: jdk
       - name: Check OWASP
-        uses: gradle/gradle-build-action@2
+        uses: gradle/gradle-build-action@v2
         with:
           arguments: clean dependencyCheckAnalyze
 
@@ -84,7 +84,7 @@ jobs:
           java-version: '11'
           java-package: jdk
       - name: Build package
-        uses: gradle/gradle-build-action@2
+        uses: gradle/gradle-build-action@v2
         with:
           arguments: assemble -x test -x integrationTest
           wrapper-cache-enabled: true
@@ -117,7 +117,7 @@ jobs:
           java-version: '11'
           java-package: jdk
       - name: Build package
-        uses: gradle/gradle-build-action@2
+        uses: gradle/gradle-build-action@v2
         with:
           arguments: clean assemble dockerCreateDockerfile -x test -x integrationTest
           wrapper-cache-enabled: true
@@ -156,7 +156,7 @@ jobs:
           name: documentation
           path: build/documentation
       - name: Build package
-        uses: gradle/gradle-build-action@2
+        uses: gradle/gradle-build-action@v2
         with:
           arguments: aggregateDocumentation
           wrapper-cache-enabled: true
