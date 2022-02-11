@@ -20,6 +20,7 @@ val jacocoReportTask = tasks.named("aggregateJacocoTestReport")
 tasks.register("aggregateReports") {
     dependsOn(dokkaHtmlMultiModuleTask)
     dependsOn(testReportTask)
+    dependsOn(jacocoReportTask)
 
     doLast {
         val targetDir = buildDir.resolve("documentation").toPath()
@@ -32,6 +33,11 @@ tasks.register("aggregateReports") {
         copy {
             into(targetDir.resolve("tests"))
             from(testReportTask.map { task -> task.outputs })
+        }
+
+        copy {
+            into(targetDir.resolve("jacoco"))
+            from(jacocoReportTask.map { task -> task.outputs })
         }
     }
 }
