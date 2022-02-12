@@ -1,12 +1,14 @@
 plugins {
     id("org.jetbrains.dokka")
 
+    // due to late-binding not working, aggregation should define tasks doc-consumer
+    id("org.javafreedom.aggregation-conventions")
+
     id("org.javafreedom.verification.jacoco-consumer-conventions")
     id("org.javafreedom.verification.test-consumer-conventions")
     id("org.javafreedom.documentation.documentation-consumer-conventions")
 
     id("org.javafreedom.verification.sonarqube-conventions")
-    id("org.javafreedom.aggregation-conventions")
 }
 
 allprojects {
@@ -14,7 +16,7 @@ allprojects {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 // this task generates all tasks for sub-projects itself, therefor it just needs

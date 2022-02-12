@@ -20,7 +20,7 @@ plugins {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 // Latest Java LTS Version
@@ -40,10 +40,10 @@ detekt {
     ignoreFailures = true
 
     reports {
-        html.enabled = true
-        xml.enabled = true
-        txt.enabled = false
-        sarif.enabled = false
+        html.required
+        xml.required
+        txt.required.set(false)
+        sarif.required.set(false)
     }
 }
 

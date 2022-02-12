@@ -5,7 +5,7 @@ rootProject.name = "gradle-by-example"
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        jcenter()
+        mavenCentral()
     }
 }
 
