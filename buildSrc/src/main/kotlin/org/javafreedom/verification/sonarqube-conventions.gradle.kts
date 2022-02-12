@@ -26,13 +26,11 @@ sonarqube {
         property("sonar.links.scm", github_project_url)
         property("sonar.links.issue", "$github_project_url/issues")
         property("sonar.coverage.jacoco.xmlReportPaths", buildDir.resolve("reports/jacoco/aggregateJacocoTestReport/aggregateJacocoTestReport.xml"))
+        property("sonar.dependencyCheck.reportPath", buildDir.resolve("reports/owasp/dependency-check-report.xml"))
     }
 }
 
 tasks.withType<SonarQubeTask>().configureEach {
     dependsOn(project.tasks.named("aggregateJacocoTestReport"))
+    dependsOn(project.tasks.named("dependencyCheckAggregate"))
 }
-
-//tasks.named("check") {
-//    dependsOn("sonarqube")
-//}
