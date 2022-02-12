@@ -38,13 +38,6 @@ tasks.withType<KotlinCompile>().configureEach {
 detekt {
     buildUponDefaultConfig = false
     ignoreFailures = true
-
-    reports {
-        html.required
-        xml.required
-        txt.required.set(false)
-        sarif.required.set(false)
-    }
 }
 
 dependencies {
