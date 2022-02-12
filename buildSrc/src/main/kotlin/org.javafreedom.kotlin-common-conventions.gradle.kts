@@ -20,7 +20,7 @@ plugins {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 // Latest Java LTS Version
@@ -38,13 +38,6 @@ tasks.withType<KotlinCompile>().configureEach {
 detekt {
     buildUponDefaultConfig = false
     ignoreFailures = true
-
-    reports {
-        html.enabled = true
-        xml.enabled = true
-        txt.enabled = false
-        sarif.enabled = false
-    }
 }
 
 dependencies {

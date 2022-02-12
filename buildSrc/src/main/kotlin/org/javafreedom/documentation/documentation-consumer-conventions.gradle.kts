@@ -1,5 +1,6 @@
 package org.javafreedom.documentation
 
+import io.gitlab.arturbosch.detekt.Detekt
 import org.asciidoctor.gradle.jvm.AsciidoctorTask
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 
@@ -16,11 +17,13 @@ val asciidoc by configurations.creating {
 val dokkaHtmlMultiModuleTask = tasks.named<DokkaMultiModuleTask>("dokkaHtmlMultiModule")
 val testReportTask = tasks.named("testReport")
 val jacocoReportTask = tasks.named("aggregateJacocoTestReport")
+val detektReportTask = tasks.named<Detekt>("aggregateDetekt")
 
 tasks.register("aggregateReports") {
     dependsOn(dokkaHtmlMultiModuleTask)
     dependsOn(testReportTask)
     dependsOn(jacocoReportTask)
+    dependsOn(detektReportTask)
 
     doLast {
         val targetDir = buildDir.resolve("documentation").toPath()
@@ -38,6 +41,11 @@ tasks.register("aggregateReports") {
         copy {
             into(targetDir.resolve("jacoco"))
             from(jacocoReportTask.map { task -> task.outputs })
+        }
+
+        copy {
+            into(targetDir.resolve("detekt"))
+            from(detektReportTask.map { task -> task.outputs })
         }
     }
 }

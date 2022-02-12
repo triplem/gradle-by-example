@@ -8,7 +8,7 @@ plugins {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 // A resolvable configuration to collect source code
@@ -61,11 +61,11 @@ val aggregateJacocoTestReport by tasks.registering(JacocoReport::class) {
     reports {
         // xml is usually used to integrate code coverage with
         // other tools like SonarQube, Coveralls or Codecov
-        xml.isEnabled = true
+        xml.required.set(true)
 
         // HTML reports can be used to see code coverage
         // without any external tools
-        html.isEnabled = true
+        html.required.set(true)
     }
 }
 
