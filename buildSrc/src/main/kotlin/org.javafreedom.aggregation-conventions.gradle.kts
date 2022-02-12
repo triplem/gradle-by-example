@@ -72,4 +72,8 @@ dependencyCheck {
     scanConfigurations = configurations.names
             .filter { n -> !n.startsWith("dokka") }
             .toList()
+
+    outputDirectory = buildDir
+        .resolve("reports")
+        .resolve("owasp").path
 }
