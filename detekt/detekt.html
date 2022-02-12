@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>detekt report</title>
+    <style>
+h2 {
+  background-color: #666666;
+  padding: 0.2em;
+  color: #ffffff;
+}
+h3 {
+  background-color:#f8dfdf;
+  padding:0.5em;
+}
+.rule {
+  background-color: #dddddd;
+  padding: 0.3em;
+  font-weight: bold;
+}
+.description {
+  color:#000000;
+  padding:0.3em;
+}
+.location {
+  color: #690505;
+  font-family: monospace;
+  display: block;
+}
+.message {
+  font-size: 0.8em;
+  color: #444444;
+  display: block;
+  margin-top: 1pt;
+}
+.rule-container {
+  border: 0.1em dashed #dddddd;
+  padding: 0.1em;
+  line-height: 1.5em;
+  margin-bottom: 8px;
+  margin-top: 8px;
+}
+pre {
+  border: 1px solid #e0e0e0;
+  overflow: scroll;
+}
+.lineno {
+  color: #999999;
+  background-color: #f0f0f0;
+}
+.error {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AwCFR4T/3uLMgAAADxJREFUCNdNyLERQEAABMCjL4lQwIzcjErpguAL+C9AvgKJDbeD/PRpLdm35Hm+MU+cB+tCKaJW4L4YBy+CAiLJrFs9mgAAAABJRU5ErkJggg==) bottom repeat-x;
+}
+.exception {
+  color: #b60808;
+  display: inline-block;
+  background-color: #ecdada;
+  border-color: #b60808;
+  border-radius: 10px;
+  border: solid 2px;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin-bottom: 16px;
+}
+</style>
+</head>
+<body>
+
+<h1>detekt report</h1>
+
+<h2>Metrics</h2>
+
+<div>
+  <ul>
+    <li>28 number of properties</li>
+    <li>22 number of functions</li>
+    <li>12 number of classes</li>
+    <li>4 number of packages</li>
+    <li>12 number of kt files</li>
+  </ul>
+</div>
+
+
+<h2>Complexity Report</h2>
+
+<div>
+  <ul>
+    <li>321 lines of code (loc)</li>
+    <li>221 source lines of code (sloc)</li>
+    <li>144 logical lines of code (lloc)</li>
+    <li>25 comment lines of code (cloc)</li>
+    <li>38 cyclomatic complexity (mcc)</li>
+    <li>18 cognitive complexity</li>
+    <li>9 number of total code smells</li>
+    <li>11% comment source ratio</li>
+    <li>263 mcc per 1,000 lloc</li>
+    <li>62 code smells per 1,000 lloc</li>
+  </ul>
+</div>
+
+
+<h2>Findings</h2>
+<div>Total: 9
+  <h3>naming: 2</h3>
+  <details id="FunctionNaming" open="open">
+    <summary class="rule-container"><span class="rule">FunctionNaming: 2 </span><span class="description">Function names should follow the naming convention set in the configuration.</span></summary>
+    <ul>
+      <li><span class="location">/home/runner/work/gradle-by-example/gradle-by-example/modules/list/src/testIntegration/kotlin/org/javafreedom/InternalDummyClassTest.kt:10:9</span><span class="message">Function names should match the pattern: ([a-z][a-zA-Z0-9]*)|(`.*`)</span>
+        <pre><code><span class="lineno">   7 </span>class InternalDummyClassTest {
+<span class="lineno">   8 </span>
+<span class="lineno">   9 </span>    @Test
+<span class="lineno">  10 </span>    fun <span class="error">testInternalDummyClass_AllProperties</span>() {
+<span class="lineno">  11 </span>        val dummy = InternalDummyClass(name = &quot;name&quot;, nick = &quot;nick&quot;)
+<span class="lineno">  12 </span>
+<span class="lineno">  13 </span>        assertThat(dummy.name).isEqualTo(&quot;name&quot;)
+</code></pre>
+      </li>
+      <li><span class="location">/home/runner/work/gradle-by-example/gradle-by-example/modules/list/src/testIntegration/kotlin/org/javafreedom/InternalDummyClassTest.kt:18:9</span><span class="message">Function names should match the pattern: ([a-z][a-zA-Z0-9]*)|(`.*`)</span>
+        <pre><code><span class="lineno">  15 </span>    }
+<span class="lineno">  16 </span>
+<span class="lineno">  17 </span>    @Test
+<span class="lineno">  18 </span>    fun <span class="error">testInternalDummyClass_DefaultProperties</span>() {
+<span class="lineno">  19 </span>        val dummy = InternalDummyClass(name = &quot;name&quot;)
+<span class="lineno">  20 </span>
+<span class="lineno">  21 </span>        assertThat(dummy.name).isEqualTo(&quot;name&quot;)
+</code></pre>
+      </li>
+    </ul>
+  </details>
+  <h3>style: 7</h3>
+  <details id="FunctionOnlyReturningConstant" open="open">
+    <summary class="rule-container"><span class="rule">FunctionOnlyReturningConstant: 1 </span><span class="description">A function that only returns a constant is misleading. Consider declaring a constant instead</span></summary>
+    <ul>
+      <li><span class="location">/home/runner/work/gradle-by-example/gradle-by-example/modules/app/src/main/kotlin/org/javafreedom/app/MessageUtils.kt:8:13</span><span class="message">getMessage is returning a constant. Prefer declaring a constant instead.</span>
+        <pre><code><span class="lineno">   5 </span>
+<span class="lineno">   6 </span>class MessageUtils {
+<span class="lineno">   7 </span>    companion object {
+<span class="lineno">   8 </span>        fun <span class="error">getMessage</span>(): String = &quot;Hello      World!&quot;
+<span class="lineno">   9 </span>    }
+<span class="lineno">  10 </span>}
+<span class="lineno">  11 </span>
+</code></pre>
+      </li>
+    </ul>
+  </details>
+  <details id="NewLineAtEndOfFile" open="open">
+    <summary class="rule-container"><span class="rule">NewLineAtEndOfFile: 2 </span><span class="description">Checks whether files end with a line separator.</span></summary>
+    <ul>
+      <li><span class="location">/home/runner/work/gradle-by-example/gradle-by-example/modules/list/src/test/kotlin/org/javafreedom/AnotherInternalDummyClassTest.kt:16:2</span><span class="message">The file /home/runner/work/gradle-by-example/gradle-by-example/modules/list/src/test/kotlin/org/javafreedom/AnotherInternalDummyClassTest.kt is not ending with a new line.</span>
+        <pre><code><span class="lineno">  13 </span>        assertThat(dummy.name).isEqualTo(&quot;name&quot;)
+<span class="lineno">  14 </span>    }
+<span class="lineno">  15 </span>
+<span class="lineno">  16 </span>}
+</code></pre>
+      </li>
+      <li><span class="location">/home/runner/work/gradle-by-example/gradle-by-example/modules/list/src/testIntegration/kotlin/org/javafreedom/InternalDummyClassTest.kt:25:2</span><span class="message">The file /home/runner/work/gradle-by-example/gradle-by-example/modules/list/src/testIntegration/kotlin/org/javafreedom/InternalDummyClassTest.kt is not ending with a new line.</span>
+        <pre><code><span class="lineno">  22 </span>        assertThat(dummy.nick).isEqualTo(&quot;&quot;)
+<span class="lineno">  23 </span>    }
+<span class="lineno">  24 </span>
+<span class="lineno">  25 </span>}
+</code></pre>
+      </li>
+    </ul>
+  </details>
+  <details id="UtilityClassWithPublicConstructor" open="open">
+    <summary class="rule-container"><span class="rule">UtilityClassWithPublicConstructor: 4 </span><span class="description">The class declaration is unnecessary because it only contains utility functions. An object declaration should be used instead.</span></summary>
+    <ul>
+      <li><span class="location">/home/runner/work/gradle-by-example/gradle-by-example/modules/app/src/main/kotlin/org/javafreedom/app/MessageUtils.kt:6:1</span><span class="message">The class MessageUtils only contains utility functions. Consider defining it as an object.</span>
+        <pre><code><span class="lineno">   3 </span> */
+<span class="lineno">   4 </span>package org.javafreedom.app
+<span class="lineno">   5 </span>
+<span class="lineno">   6 </span><span class="error">class MessageUtils {</span>
+<span class="lineno">   7 </span><span class="error">    companion object {</span>
+<span class="lineno">   8 </span><span class="error">        fun getMessage(): String = &quot;Hello      World!&quot;</span>
+<span class="lineno">   9 </span><span class="error">    }</span>
+</code></pre>
+      </li>
+      <li><span class="location">/home/runner/work/gradle-by-example/gradle-by-example/modules/utilities/src/main/kotlin/org/javafreedom/utilities/JoinUtils.kt:8:1</span><span class="message">The class JoinUtils only contains utility functions. Consider defining it as an object.</span>
+        <pre><code><span class="lineno">   5 </span>
+<span class="lineno">   6 </span>import org.javafreedom.list.LinkedList
+<span class="lineno">   7 </span>
+<span class="lineno">   8 </span><span class="error">class JoinUtils {</span>
+<span class="lineno">   9 </span><span class="error">    companion object {</span>
+<span class="lineno">  10 </span><span class="error">        fun join(source: LinkedList): String {</span>
+<span class="lineno">  11 </span><span class="error">            val result = StringBuilder()</span>
+</code></pre>
+      </li>
+      <li><span class="location">/home/runner/work/gradle-by-example/gradle-by-example/modules/utilities/src/main/kotlin/org/javafreedom/utilities/SplitUtils.kt:8:1</span><span class="message">The class SplitUtils only contains utility functions. Consider defining it as an object.</span>
+        <pre><code><span class="lineno">   5 </span>
+<span class="lineno">   6 </span>import org.javafreedom.list.LinkedList
+<span class="lineno">   7 </span>
+<span class="lineno">   8 </span><span class="error">class SplitUtils {</span>
+<span class="lineno">   9 </span><span class="error">    companion object {</span>
+<span class="lineno">  10 </span><span class="error">        fun split(source: String): LinkedList {</span>
+<span class="lineno">  11 </span><span class="error">            var lastFind = 0</span>
+</code></pre>
+      </li>
+      <li><span class="location">/home/runner/work/gradle-by-example/gradle-by-example/modules/utilities/src/main/kotlin/org/javafreedom/utilities/StringUtils.kt:8:1</span><span class="message">The class StringUtils only contains utility functions. Consider defining it as an object.</span>
+        <pre><code><span class="lineno">   5 </span>
+<span class="lineno">   6 </span>import org.javafreedom.list.LinkedList
+<span class="lineno">   7 </span>
+<span class="lineno">   8 </span><span class="error">class StringUtils {</span>
+<span class="lineno">   9 </span><span class="error">    companion object {</span>
+<span class="lineno">  10 </span><span class="error">        fun join(source: LinkedList): String {</span>
+<span class="lineno">  11 </span><span class="error">            return JoinUtils.join(source)</span>
+</code></pre>
+      </li>
+    </ul>
+  </details>
+</div>
+
+
+generated with <a href="https://detekt.github.io/">detekt version 1.19.0</a> on 2022-02-12 15:43:41 UTC.
+
+</body>
+</html>

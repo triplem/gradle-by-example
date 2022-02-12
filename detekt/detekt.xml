@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="4.3">
+<file name="/home/runner/work/gradle-by-example/gradle-by-example/modules/list/src/testIntegration/kotlin/org/javafreedom/InternalDummyClassTest.kt">
+	<error line="10" column="9" severity="warning" message="Function names should match the pattern: ([a-z][a-zA-Z0-9]*)|(`.*`)" source="detekt.FunctionNaming" />
+	<error line="18" column="9" severity="warning" message="Function names should match the pattern: ([a-z][a-zA-Z0-9]*)|(`.*`)" source="detekt.FunctionNaming" />
+	<error line="25" column="2" severity="warning" message="The file /home/runner/work/gradle-by-example/gradle-by-example/modules/list/src/testIntegration/kotlin/org/javafreedom/InternalDummyClassTest.kt is not ending with a new line." source="detekt.NewLineAtEndOfFile" />
+</file>
+<file name="/home/runner/work/gradle-by-example/gradle-by-example/modules/app/src/main/kotlin/org/javafreedom/app/MessageUtils.kt">
+	<error line="8" column="13" severity="warning" message="getMessage is returning a constant. Prefer declaring a constant instead." source="detekt.FunctionOnlyReturningConstant" />
+	<error line="6" column="1" severity="warning" message="The class MessageUtils only contains utility functions. Consider defining it as an object." source="detekt.UtilityClassWithPublicConstructor" />
+</file>
+<file name="/home/runner/work/gradle-by-example/gradle-by-example/modules/list/src/test/kotlin/org/javafreedom/AnotherInternalDummyClassTest.kt">
+	<error line="16" column="2" severity="warning" message="The file /home/runner/work/gradle-by-example/gradle-by-example/modules/list/src/test/kotlin/org/javafreedom/AnotherInternalDummyClassTest.kt is not ending with a new line." source="detekt.NewLineAtEndOfFile" />
+</file>
+<file name="/home/runner/work/gradle-by-example/gradle-by-example/modules/utilities/src/main/kotlin/org/javafreedom/utilities/StringUtils.kt">
+	<error line="8" column="1" severity="warning" message="The class StringUtils only contains utility functions. Consider defining it as an object." source="detekt.UtilityClassWithPublicConstructor" />
+</file>
+<file name="/home/runner/work/gradle-by-example/gradle-by-example/modules/utilities/src/main/kotlin/org/javafreedom/utilities/SplitUtils.kt">
+	<error line="8" column="1" severity="warning" message="The class SplitUtils only contains utility functions. Consider defining it as an object." source="detekt.UtilityClassWithPublicConstructor" />
+</file>
+<file name="/home/runner/work/gradle-by-example/gradle-by-example/modules/utilities/src/main/kotlin/org/javafreedom/utilities/JoinUtils.kt">
+	<error line="8" column="1" severity="warning" message="The class JoinUtils only contains utility functions. Consider defining it as an object." source="detekt.UtilityClassWithPublicConstructor" />
+</file>
+</checkstyle>
