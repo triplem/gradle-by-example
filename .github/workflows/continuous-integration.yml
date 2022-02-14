@@ -3,8 +3,8 @@ name: CI Build
 on: [push]
 
 jobs:
-  compile:
-    name: Compile
+  build:
+    name: Build
     runs-on: ubuntu-latest
 
     steps:
@@ -17,31 +17,29 @@ jobs:
           java-version: '11'
           java-package: jdk
 
-      - name: Setup Gradle and Compile
+      - name: Compile
         uses: gradle/gradle-build-action@v2
         with:
           arguments: clean classes testClasses testIntegrationClasses
 
-  tests:
-    name: Tests
-    needs: compile
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'liberica'
-          java-version: '11'
-          java-package: jdk
       - name: Run tests
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: clean check dependencyCheckAnalyze sonarqube aggregateReports
+          arguments: check dependencyCheckAnalyze sonarqube aggregateReports
+
+      - name: Security
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: dependencyCheckAnalyze sonarqube aggregateReports
+
+      - name: Reporting
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: sonarqube aggregateReports
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Upload documentation results
         uses: actions/upload-artifact@v2
         with:
@@ -50,7 +48,7 @@ jobs:
 
   release:
     name: Release
-    needs: tests
+    needs: build
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
