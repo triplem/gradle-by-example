@@ -27,7 +27,6 @@ tasks.register("aggregateReports") {
     dependsOn(testReportTask)
     dependsOn(jacocoReportTask)
     dependsOn(detektReportTask)
-    dependsOn(dependencyCheckTask)
 
     doLast {
         val targetDir = buildDir.resolve("documentation").toPath()
@@ -51,13 +50,6 @@ tasks.register("aggregateReports") {
             into(targetDir.resolve("detekt"))
             from(detektReportTask.map { task -> task.outputs })
         }
-
-        copy {
-            into(targetDir.resolve("owasp"))
-            project.extensions.findByType<DependencyCheckExtension>()?.let {
-                from(it.outputDirectory)
-            }
-        }
     }
 }
 
@@ -69,6 +61,13 @@ tasks.register("aggregateDocumentation") {
 
     doLast {
         val targetDir = buildDir.resolve("documentation").toPath()
+
+        copy {
+            into(targetDir.resolve("owasp"))
+            project.extensions.findByType<DependencyCheckExtension>()?.let {
+                from(it.outputDirectory)
+            }
+        }
 
         copy {
             into(targetDir.resolve("pages"))
