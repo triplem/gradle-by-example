@@ -31,12 +31,15 @@ val aggregateDetektTask = tasks.register<Detekt>("aggregateDetekt") {
     )
 }
 
+tasks.check {
+    dependsOn(aggregateDetektTask)
+}
+
 subprojects {
     tasks.register("debug") {
         val sonarTestSources = mutableListOf<String>()
         sonarTestSources.add("src/testIntegration")
         sonarTestSources.add("src/test")
-        val testDirs = sonarTestSources.filter { this.project.projectDir.resolve(it).exists() }.joinToString()
     }
 
     if (this.name != "documentation") {
