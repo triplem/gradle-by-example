@@ -68,7 +68,7 @@ subprojects {
 dependencyCheck {
     failBuildOnCVSS = 11F
     formats = listOf(ReportGenerator.Format.HTML,
-        ReportGenerator.Format.JUNIT, ReportGenerator.Format.XML)
+        ReportGenerator.Format.JUNIT, ReportGenerator.Format.JSON)
     suppressionFile = "${rootProject.rootDir}/config/owasp/owasp-supression.xml"
 
     // remove dokka depencencies (obviously just a javadoc kinda dependency)
