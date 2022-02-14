@@ -35,7 +35,7 @@ jobs:
       - name: Reporting
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: sonarqube aggregateReports
+          arguments: aggregateReports sonarqube
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

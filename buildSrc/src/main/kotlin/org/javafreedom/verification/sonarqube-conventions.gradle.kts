@@ -24,7 +24,8 @@ sonarqube {
         property("sonar.links.scm", github_project_url)
         property("sonar.links.issue", "$github_project_url/issues")
         property("sonar.coverage.jacoco.xmlReportPaths", buildDir.resolve("reports/jacoco/aggregateJacocoTestReport/aggregateJacocoTestReport.xml"))
-        property("sonar.dependencyCheck.reportPath", buildDir.resolve("reports/owasp/dependency-check-report.xml"))
+        property("sonar.dependencyCheck.xmlReportPath", buildDir.resolve("reports/owasp/dependency-check-report.xml"))
+        property("sonar.dependencyCheck.htmlReportPath", buildDir.resolve("reports/owasp/dependency-check-report.html"))
     }
 }
 
