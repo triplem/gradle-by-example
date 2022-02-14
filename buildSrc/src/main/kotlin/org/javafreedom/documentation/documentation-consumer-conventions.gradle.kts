@@ -23,11 +23,11 @@ val detektReportTask = tasks.named<Detekt>("aggregateDetekt")
 val dependencyCheckTask = tasks.named<Aggregate>("dependencyCheckAggregate")
 
 tasks.register("aggregateReports") {
-    dependsOn(dokkaHtmlMultiModuleTask)
-    dependsOn(testReportTask)
-    dependsOn(jacocoReportTask)
-    dependsOn(detektReportTask)
-    dependsOn(dependencyCheckTask)
+//    dependsOn(dokkaHtmlMultiModuleTask)
+//    dependsOn(testReportTask)
+//    dependsOn(jacocoReportTask)
+//    dependsOn(detektReportTask)
+//    dependsOn(dependencyCheckTask)
 
     doLast {
         val targetDir = buildDir.resolve("documentation").toPath()

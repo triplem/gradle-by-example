@@ -1,7 +1,5 @@
 package org.javafreedom.verification
 
-import org.sonarqube.gradle.SonarQubeTask
-
 plugins {
     `java-library`
     id("org.sonarqube")
@@ -30,7 +28,7 @@ sonarqube {
     }
 }
 
-tasks.withType<SonarQubeTask>().configureEach {
-    dependsOn(project.tasks.named("aggregateJacocoTestReport"))
-    dependsOn(project.tasks.named("dependencyCheckAggregate"))
-}
+//tasks.withType<SonarQubeTask>().configureEach {
+//    dependsOn(project.tasks.named("aggregateJacocoTestReport"))
+//    dependsOn(project.tasks.named("dependencyCheckAggregate"))
+//}
