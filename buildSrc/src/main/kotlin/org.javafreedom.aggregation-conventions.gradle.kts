@@ -36,7 +36,6 @@ subprojects {
         val sonarTestSources = mutableListOf<String>()
         sonarTestSources.add("src/testIntegration")
         sonarTestSources.add("src/test")
-        val testDirs = sonarTestSources.filter { this.project.projectDir.resolve(it).exists() }.joinToString()
     }
 
     if (this.name != "documentation") {
@@ -63,14 +62,17 @@ subprojects {
 }
 
 dependencyCheck {
-    failBuildOnCVSS = 3F
+    failBuildOnCVSS = 11F
     formats = listOf(ReportGenerator.Format.HTML,
-        ReportGenerator.Format.JUNIT, ReportGenerator.Format.XML)
+        ReportGenerator.Format.JUNIT, ReportGenerator.Format.XML, ReportGenerator.Format.SARIF)
     suppressionFile = "${rootProject.rootDir}/config/owasp/owasp-supression.xml"
 
-    // remove dokka depencencies (obviously just a javadoc kinda dependency)
+    // remove plugin dependencies, for configs see
+    // https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_plugin_and_dependency_management
+    val validConfigurations = listOf("compileClasspath", "runtimeClasspath", "testCompileClasspath",
+        "testRuntimeClasspath", "default")
     scanConfigurations = configurations.names
-            .filter { n -> !n.startsWith("dokka") }
+            .filter { validConfigurations.contains(it) }
             .toList()
 
     outputDirectory = buildDir
