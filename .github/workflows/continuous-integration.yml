@@ -66,10 +66,6 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: clean dependencyCheckAnalyze
-      - name: Upload owasp sarif to Security tab
-        uses: github/codeql-action/upload-sarif@v1
-        with:
-          sarif_file: build/reports/owasp/dependency-check-report.sarif
       - name: Upload owasp-report results
         uses: actions/upload-artifact@v2
         with:
@@ -143,6 +139,20 @@ jobs:
           tags: |
             ghcr.io/triplem/gradle-by-example:latest
             ghcr.io/triplem/gradle-by-example:${{ needs.release.outputs.revnumber }}
+      - name: scan container using trivy
+        id: scan
+        uses: azure/container-scan@v0
+        with:
+          image-name: ghcr.io/triplem/gradle-by-example:latest
+      - name: Convert Container Scan Report to SARIF
+        id: scan-to-sarif
+        uses: rm3l/container-scan-to-sarif-action@v1
+        with:
+          input-file: ${{ steps.scan.outputs.scan-report-path }}
+      - name: Upload SARIF reports to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: ${{ steps.scan-to-sarif.outputs.sarif-report-path }}
 
   publish-docs:
     name: Publish Docs
