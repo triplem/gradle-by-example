@@ -62,7 +62,7 @@ subprojects {
 }
 
 dependencyCheck {
-    failBuildOnCVSS = 3F
+    failBuildOnCVSS = 11F
     formats = listOf(ReportGenerator.Format.HTML,
         ReportGenerator.Format.JUNIT, ReportGenerator.Format.XML, ReportGenerator.Format.SARIF)
     suppressionFile = "${rootProject.rootDir}/config/owasp/owasp-supression.xml"
