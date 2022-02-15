@@ -67,9 +67,12 @@ dependencyCheck {
         ReportGenerator.Format.JUNIT, ReportGenerator.Format.XML, ReportGenerator.Format.SARIF)
     suppressionFile = "${rootProject.rootDir}/config/owasp/owasp-supression.xml"
 
-    // remove dokka depencencies (obviously just a javadoc kinda dependency)
+    // remove plugin dependencies, for configs see
+    // https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_plugin_and_dependency_management
+    val validConfigurations = listOf("compileClasspath", "runtimeClasspath", "testCompileClasspath",
+        "testRuntimeClasspath", "default")
     scanConfigurations = configurations.names
-            .filter { n -> !n.startsWith("dokka") }
+            .filter { validConfigurations.contains(it) }
             .toList()
 
     outputDirectory = buildDir
