@@ -36,7 +36,6 @@ subprojects {
         val sonarTestSources = mutableListOf<String>()
         sonarTestSources.add("src/testIntegration")
         sonarTestSources.add("src/test")
-        val testDirs = sonarTestSources.filter { this.project.projectDir.resolve(it).exists() }.joinToString()
     }
 
     if (this.name != "documentation") {
@@ -65,7 +64,7 @@ subprojects {
 dependencyCheck {
     failBuildOnCVSS = 3F
     formats = listOf(ReportGenerator.Format.HTML,
-        ReportGenerator.Format.JUNIT, ReportGenerator.Format.XML)
+        ReportGenerator.Format.JUNIT, ReportGenerator.Format.XML, ReportGenerator.Format.SARIF)
     suppressionFile = "${rootProject.rootDir}/config/owasp/owasp-supression.xml"
 
     // remove dokka depencencies (obviously just a javadoc kinda dependency)
