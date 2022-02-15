@@ -11,7 +11,7 @@ val dockerTag = System.getenv()["revnumber"] ?: "latest"
 
 docker {
     javaApplication {
-        baseImage.set("openjdk:11-jdk-slim")
+        baseImage.set("eclipse-temurin:11-jre")
         maintainer.set("Gradle-By-Example-Team 'gbex@somewhere.com'")
         jvmArgs.set(listOf("-server", "-XX:+UnlockExperimentalVMOptions", "-XX:InitialRAMFraction=2",
             "-XX:MinRAMFraction=2", "-XX:MaxRAMFraction=2", "-XX:+UseG1GC",
