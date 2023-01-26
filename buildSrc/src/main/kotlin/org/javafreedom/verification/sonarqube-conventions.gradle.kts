@@ -1,6 +1,6 @@
 package org.javafreedom.verification
 
-import org.sonarqube.gradle.SonarQubeTask
+import org.sonarqube.gradle.SonarTask
 
 plugins {
     `java-library`
@@ -10,7 +10,7 @@ plugins {
 val github_org: String by project
 val github_project_url = "https://github.com/${github_org}/${rootProject.name}"
 
-sonarqube {
+sonar {
     properties {
         // See https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle#AnalyzingwithSonarQubeScannerforGradle-Configureanalysisproperties
         property("sonar.sourceEncoding", "UTF-8")
@@ -29,10 +29,6 @@ sonarqube {
     }
 }
 
-tasks.withType<SonarQubeTask>().configureEach {
+tasks.withType<SonarTask>().configureEach {
     dependsOn(project.tasks.named("aggregateJacocoTestReport"))
 }
-
-//tasks.named("check") {
-//    dependsOn("sonarqube")
-//}

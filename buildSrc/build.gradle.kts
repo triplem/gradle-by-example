@@ -31,15 +31,15 @@ dependencies {
     implementation(kotlin("gradle-plugin", kotlinVersion))
     implementation(kotlin("bom", kotlinVersion))
     implementation(kotlin("reflect"))
-    implementation(kotlin("stdlib-jdk8"))
-    implementation("org.jetbrains.dokka:dokka-gradle-plugin:$kotlinVersion") {
+    implementation(kotlin("stdlib"))
+    implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.7.20") {
         exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk8")
     }
-    implementation("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.3")
-    implementation("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.19.0") {
+    implementation("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.5.0.2730")
+    implementation("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.22.0") {
         exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk8")
     }
-    implementation("org.owasp:dependency-check-gradle:6.5.3")
-    implementation("org.asciidoctor:asciidoctor-gradle-jvm:3.3.2")
-    implementation("com.bmuschko:gradle-docker-plugin:6.7.0")
+    implementation("org.owasp:dependency-check-gradle:8.0.1")
+    implementation("org.asciidoctor:asciidoctor-gradle-jvm:4.0.0-alpha.1")
+    implementation("com.bmuschko:gradle-docker-plugin:9.1.0")
 }

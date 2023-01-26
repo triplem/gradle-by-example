@@ -1,6 +1,6 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import org.owasp.dependencycheck.reporting.ReportGenerator
-import org.sonarqube.gradle.SonarQubeTask
+import org.sonarqube.gradle.SonarTask
 
 plugins {
     id("org.javafreedom.verification.jacoco-consumer-conventions")
@@ -47,7 +47,7 @@ subprojects {
         sonarTestSources.add("src/testIntegration")
         val testDirs = sonarTestSources.filter { baseDir.resolve(it).exists() }.joinToString()
 
-        sonarqube {
+        sonar {
             properties {
                 property("sonar.sources", "src/main")
                 property("sonar.kotlin.detekt.reportPaths", reportsDir)
@@ -55,7 +55,7 @@ subprojects {
             }
         }
 
-        tasks.withType<SonarQubeTask>().configureEach {
+        tasks.withType<SonarTask>().configureEach {
             shouldRunAfter("detekt")
         }
     }
@@ -69,8 +69,7 @@ dependencyCheck {
 
     // remove plugin dependencies, for configs see
     // https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_plugin_and_dependency_management
-    val validConfigurations = listOf("compileClasspath", "runtimeClasspath", "testCompileClasspath",
-        "testRuntimeClasspath", "default")
+    val validConfigurations = listOf("compileClasspath", "runtimeClasspath", "default")
     scanConfigurations = configurations.names
             .filter { validConfigurations.contains(it) }
             .toList()
