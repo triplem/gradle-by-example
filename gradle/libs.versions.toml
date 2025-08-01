@@ -1,7 +1,7 @@
 [versions]
 # Language versions
 kotlin = "2.0.20"
-java = "11"
+java = "21"
 
 # Testing frameworks
 junit = "5.11.0"
