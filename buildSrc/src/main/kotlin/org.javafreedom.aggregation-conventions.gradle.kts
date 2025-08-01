@@ -1,6 +1,4 @@
 import io.gitlab.arturbosch.detekt.Detekt
-import org.owasp.dependencycheck.reporting.ReportGenerator
-import org.sonarqube.gradle.SonarExtension
 
 plugins {
     id("org.javafreedom.verification.jacoco-consumer-conventions")
@@ -34,7 +32,7 @@ val aggregateDetektTask = tasks.register<Detekt>("aggregateDetekt") {
 subprojects {
     tasks.register("debug") {
         val sonarTestSources = mutableListOf<String>()
-        sonarTestSources.add("src/testIntegration")
+        sonarTestSources.add("src/integrationTest")
         sonarTestSources.add("src/test")
     }
 
@@ -44,7 +42,7 @@ subprojects {
 
         val sonarTestSources = mutableListOf<String>()
         sonarTestSources.add("src/test")
-        sonarTestSources.add("src/testIntegration")
+        sonarTestSources.add("src/integrationTest")
         val testDirs = sonarTestSources.filter { baseDir.resolve(it).exists() }.joinToString()
 
         sonarqube {

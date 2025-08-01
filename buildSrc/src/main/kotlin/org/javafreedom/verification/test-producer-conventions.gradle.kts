@@ -2,54 +2,61 @@ package org.javafreedom.verification
 
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.jetbrains.kotlin.gradle.plugin.KotlinTarget
 
 plugins {
     kotlin("jvm")
+    id("jvm-test-suite")
     id("idea")
 }
 
 // -----------------------------
-// Add testIntegration Sourceset and Task (and also add those as Test-Module to IDEA)
+// Configure test suites using the modern test-suites plugin
 // -----------------------------
 
-// to get rid of "Overload resolution ambiguity"-messsage
-val sourcesets = project.extensions.getByType(SourceSetContainer::class)
-val testIntegration by sourcesets.creating
-
-configurations[testIntegration.implementationConfigurationName]
-    .extendsFrom(configurations.testImplementation.get())
-configurations[testIntegration.runtimeOnlyConfigurationName]
-    .extendsFrom(configurations.testRuntimeOnly.get())
-
-// Configure test integration configurations properly
-
-val koTarget: KotlinTarget = kotlin.target
-koTarget.compilations.named("testIntegration") {
-    associateWith(target.compilations.named("main").get())
+testing {
+    suites {
+        val test by getting(JvmTestSuite::class) {
+            useJUnitJupiter()
+        }
+        
+        val integrationTest by registering(JvmTestSuite::class) {
+            dependencies {
+                implementation(project())
+                // Inherit all test dependencies
+                implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+                implementation("org.jetbrains.kotlin:kotlin-stdlib")
+                implementation("io.github.microutils:kotlin-logging:3.0.5")
+                implementation("com.willowtreeapps.assertk:assertk-jvm:0.28.1") 
+                implementation("org.jetbrains.kotlin:kotlin-test")
+                implementation("org.jetbrains.kotlin:kotlin-test-junit5")
+                runtimeOnly("org.junit.jupiter:junit-jupiter-engine")
+            }
+            
+            targets {
+                all {
+                    testTask.configure {
+                        description = "Runs integration tests."
+                        group = "Verification"
+                        shouldRunAfter(test)
+                    }
+                }
+            }
+        }
+    }
 }
 
-val integrationTestTask = tasks.register<Test>("integrationTest") {
-    description = "Runs integration tests."
-    group = "Verification"
-
-    testClassesDirs = testIntegration.output.classesDirs
-    classpath = configurations[testIntegration.runtimeClasspathConfigurationName] + testIntegration.output
-
-    shouldRunAfter(tasks.test)
+// Configure Kotlin compilation to allow internal visibility for integration tests
+afterEvaluate {
+    kotlin.target.compilations.named("integrationTest") {
+        associateWith(kotlin.target.compilations.named("main").get())
+    }
 }
 
 tasks.check {
-    dependsOn(integrationTestTask)
+    dependsOn(testing.suites.named("integrationTest"))
 }
 
-idea {
-    module {
-        testSources.from(testIntegration.allJava.srcDirs)
-
-        testResources.from(testIntegration.resources.srcDirs)
-    }
-}
+// IDEA integration is handled automatically by test-suites plugin
 
 // -----------------------------
 // Add configuration to allow aggregation of unit-test-reports
@@ -67,7 +74,9 @@ configurations.create("binaryTestResultsElements") {
     }
 
     outgoing.artifact(tasks.test.map { task -> task.binaryResultsDirectory.get() })
-    outgoing.artifact(integrationTestTask.map { task -> task.binaryResultsDirectory.get() })
+    outgoing.artifact(tasks.named("integrationTest").map { task -> 
+        (task as Test).binaryResultsDirectory.get() 
+    })
 }
 
 tasks.withType<Test>().configureEach {
