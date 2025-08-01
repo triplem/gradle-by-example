@@ -1,12 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.*
-import java.util.Properties
 
-val properties = Properties().also { props ->
-    project.projectDir.resolveSibling("../gradle.properties").bufferedReader().use {
-        props.load(it)
-    }
-}
-val junitVersion: String = properties.getProperty("junitVersion")
+val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
 plugins {
     java
@@ -44,22 +38,19 @@ detekt {
 dependencies {
     constraints {
         // Define dependency versions as constraints
-        implementation("org.apache.commons:commons-text:1.12.0")
+        implementation(libs.findLibrary("commonsText").get())
     }
 
     // Align versions of all Kotlin components
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+    implementation(platform(libs.findLibrary("kotlin-bom").get()))
 
-    // Use the Kotlin JDK 8 standard library.
-    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    // Use the Kotlin standard library
+    implementation(libs.findLibrary("kotlin-stdlib").get())
 
     // Add additional dependencies useful for development
-    implementation("io.github.microutils:kotlin-logging:3.0.5")
+    implementation(libs.findLibrary("kotlinLogging").get())
     
     // Testing dependencies
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.28.1")
-    testImplementation(kotlin("test"))
-    testImplementation(kotlin("test-junit5"))
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    testImplementation(libs.findBundle("testing").get())
+    testRuntimeOnly(libs.findBundle("testingRuntime").get())
 }

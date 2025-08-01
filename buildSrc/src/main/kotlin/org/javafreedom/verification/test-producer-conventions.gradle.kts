@@ -3,6 +3,8 @@ package org.javafreedom.verification
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
+val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+
 plugins {
     kotlin("jvm")
     id("jvm-test-suite")
@@ -23,13 +25,14 @@ testing {
             dependencies {
                 implementation(project())
                 // Inherit all test dependencies
-                implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-                implementation("org.jetbrains.kotlin:kotlin-stdlib")
-                implementation("io.github.microutils:kotlin-logging:3.0.5")
-                implementation("com.willowtreeapps.assertk:assertk-jvm:0.28.1") 
-                implementation("org.jetbrains.kotlin:kotlin-test")
-                implementation("org.jetbrains.kotlin:kotlin-test-junit5")
-                runtimeOnly("org.junit.jupiter:junit-jupiter-engine")
+                implementation(platform(libs.findLibrary("kotlin-bom").get()))
+                implementation(libs.findLibrary("kotlin-stdlib").get())
+                implementation(libs.findLibrary("kotlinLogging").get())
+                implementation(libs.findLibrary("kotlin-test").get())
+                implementation(libs.findLibrary("kotlin-test-junit5").get())
+                implementation(libs.findLibrary("junitJupiterApi").get())
+                implementation(libs.findLibrary("assertkJvm").get())
+                runtimeOnly(libs.findLibrary("junitJupiterEngine").get())
             }
             
             targets {
