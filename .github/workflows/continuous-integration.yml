@@ -1,6 +1,12 @@
 name: CI Build
 
-on: [push]
+on: 
+  push:
+  pull_request:
+    branches: [ main ]
+
+env:
+  GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.configureondemand=true
 
 jobs:
   compile:
@@ -8,42 +14,64 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '11'
-          java-package: jdk
 
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v3
+        
       - name: Setup Gradle and Compile
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v3
         with:
-          arguments: clean classes testClasses testIntegrationClasses
+          arguments: clean classes testClasses integrationTestClasses
+          cache-read-only: false
 
+  validate:
+    name: Validate Setup
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+      - name: Validate Gradle Wrapper
+        uses: gradle/actions/wrapper-validation@v3
+      - name: Validate Version Catalog
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          arguments: dependencies --configuration compileClasspath
+          cache-read-only: false
+    
   tests:
     name: Tests
-    needs: compile
+    needs: [compile, validate]
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '11'
-          java-package: jdk
       - name: Run tests
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v3
         with:
           arguments: clean check sonarqube aggregateReports
+          cache-read-only: false
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload documentation results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: documentation
           path: build/documentation
@@ -53,40 +81,45 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '11'
-          java-package: jdk
       - name: Check OWASP
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v3
         with:
           arguments: clean dependencyCheckAnalyze
       - name: Upload owasp-report results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: owasp-reports
           path: build/reports/owasp
       - name: Build package
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v3
         with:
           arguments: clean assemble dockerCreateDockerfile -x test -x integrationTest
       - name: Build Image
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v5
         with:
           context: ./modules/app/build/docker/
           file: ./modules/app/build/docker/Dockerfile
           push: false
           tags: ghcr.io/triplem/gradle-by-example:latest
       - name: Scan container using trivy
-        id: scan
-        uses: azure/container-scan@v0
+        uses: aquasecurity/trivy-action@master
         with:
-          image-name: ghcr.io/triplem/gradle-by-example:latest
+          image-ref: ghcr.io/triplem/gradle-by-example:latest
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+      - name: Upload Trivy scan results
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-results
+          path: trivy-results.sarif
 
   release:
     name: Release
@@ -95,23 +128,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '11'
-          java-package: jdk
       - name: Build package
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v3
         with:
           arguments: assemble -x test -x integrationTest
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '20'
       - name: Add plugin for conventional commits
         run: npm install conventional-changelog-conventionalcommits @semantic-release/exec
         working-directory: ./.github/workflows
@@ -129,25 +161,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '11'
-          java-package: jdk
       - name: Build package
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v3
         with:
           arguments: clean assemble dockerCreateDockerfile -x test -x integrationTest
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.CR_PAT }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v5
         with:
           context: ./modules/app/build/docker/
           file: ./modules/app/build/docker/Dockerfile
@@ -162,33 +193,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '11'
-          java-package: jdk
       - name: Download documentation reports
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: documentation
           path: build/documentation
       - name: Download owasp reports
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: owasp-reports
           path: build/reports/owasp
       - name: Build package
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v3
         with:
           arguments: aggregateDocumentation
         env:
           revnumber: ${{ needs.release.outputs.revnumber }}
       - name: Publish documentation
-        uses: JamesIves/github-pages-deploy-action@v4.2.3
+        uses: JamesIves/github-pages-deploy-action@v4.6.9
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: build/documentation
-          CLEAN: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: build/documentation
+          clean: true

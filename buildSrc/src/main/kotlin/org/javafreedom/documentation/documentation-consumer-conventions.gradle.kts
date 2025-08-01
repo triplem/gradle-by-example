@@ -53,9 +53,12 @@ tasks.register("aggregateReports") {
 }
 
 tasks.register("aggregateDocumentation") {
-    asciidoc.dependencies
-        .filterIsInstance<ProjectDependency>()
-        .forEach { dependsOn("${it.group}:${it.name}:asciidoctor") }
+    // Depend on all asciidoctor tasks from projects in the asciidoc configuration
+    dependsOn(provider {
+        asciidoc.dependencies
+            .filterIsInstance<ProjectDependency>()
+            .map { "${it.name}:asciidoctor" }
+    })
 
     doLast {
         val targetDir = layout.buildDirectory.dir("documentation").get().asFile.toPath()
