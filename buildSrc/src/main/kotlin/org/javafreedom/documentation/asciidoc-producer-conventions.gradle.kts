@@ -17,7 +17,7 @@ val revNumber = System.getenv()["revnumber"] ?: "DEV-Version"
 
 val asciidoctorTask = tasks.named<AsciidoctorTask>("asciidoctor") {
     setSourceDir(file("docs"))
-    setOutputDir(file("$buildDir/docs"))
+    setOutputDir(layout.buildDirectory.dir("docs"))
 
     resources {
         from("docs/resources") {

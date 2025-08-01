@@ -22,9 +22,7 @@ configurations[testIntegration.implementationConfigurationName]
 configurations[testIntegration.runtimeOnlyConfigurationName]
     .extendsFrom(configurations.testRuntimeOnly.get())
 
-// this the solution for the deprecation?
-configurations[testIntegration.implementationConfigurationName].isCanBeResolved = true
-configurations[testIntegration.runtimeOnlyConfigurationName].isCanBeResolved = true
+// Configure test integration configurations properly
 
 val koTarget: KotlinTarget = kotlin.target
 koTarget.compilations.named("testIntegration") {
@@ -47,13 +45,9 @@ tasks.check {
 
 idea {
     module {
-        val testSources = testSourceDirs
-        testSources.addAll(testIntegration.allJava.srcDirs)
-        testSourceDirs = testSources
+        testSources.from(testIntegration.allJava.srcDirs)
 
-        val testResources = testResourceDirs
-        testResources.addAll(testIntegration.resources.srcDirs)
-        testResourceDirs = testResources
+        testResources.from(testIntegration.resources.srcDirs)
     }
 }
 

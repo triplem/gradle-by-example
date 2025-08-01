@@ -25,13 +25,14 @@ repositories {
 
 // Latest Java LTS Version
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.majorVersion
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
     }
 }
 
@@ -50,17 +51,15 @@ dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
     // Use the Kotlin JDK 8 standard library.
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
 
-    // Add additonal dependencies useful for development
+    // Add additional dependencies useful for development
     implementation("io.github.microutils:kotlin-logging:3.0.5")
+    
+    // Testing dependencies
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.28.1")
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit5"))
-
-    // Use JUnit Jupiter API for testing.
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
-
-    // Use JUnit Jupiter Engine for testing.
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
 }

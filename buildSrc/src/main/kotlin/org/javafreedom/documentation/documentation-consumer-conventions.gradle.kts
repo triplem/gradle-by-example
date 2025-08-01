@@ -1,7 +1,6 @@
 package org.javafreedom.documentation
 
 import io.gitlab.arturbosch.detekt.Detekt
-import org.asciidoctor.gradle.jvm.AsciidoctorTask
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension
 import org.owasp.dependencycheck.gradle.tasks.Aggregate
@@ -29,7 +28,7 @@ tasks.register("aggregateReports") {
     dependsOn(detektReportTask)
 
     doLast {
-        val targetDir = buildDir.resolve("documentation").toPath()
+        val targetDir = layout.buildDirectory.dir("documentation").get().asFile.toPath()
 
         copy {
             into(targetDir.resolve("dokka"))
@@ -56,11 +55,10 @@ tasks.register("aggregateReports") {
 tasks.register("aggregateDocumentation") {
     asciidoc.dependencies
         .filterIsInstance<ProjectDependency>()
-        .map { it.dependencyProject.tasks.withType<AsciidoctorTask>() }
-        .forEach { dependsOn(it) }
+        .forEach { dependsOn("${it.group}:${it.name}:asciidoctor") }
 
     doLast {
-        val targetDir = buildDir.resolve("documentation").toPath()
+        val targetDir = layout.buildDirectory.dir("documentation").get().asFile.toPath()
 
         copy {
             into(targetDir.resolve("owasp"))

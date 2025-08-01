@@ -20,26 +20,37 @@ repositories {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions.jvmTarget = "11"
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+    }
 }
 
 dependencies {
+    // Kotlin dependencies
     implementation(kotlin("gradle-plugin", kotlinVersion))
     implementation(kotlin("bom", kotlinVersion))
     implementation(kotlin("reflect"))
-    implementation(kotlin("stdlib-jdk8"))
+    implementation(kotlin("stdlib"))
+    
+    // Documentation plugins
     implementation("org.jetbrains.dokka:dokka-gradle-plugin:1.9.20") {
         exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk8")
     }
+    implementation("org.asciidoctor:asciidoctor-gradle-jvm:4.0.3")
+    
+    // Code quality and security plugins
     implementation("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:5.1.0.4882")
     implementation("io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.23.7") {
         exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk8")
     }
     implementation("org.owasp:dependency-check-gradle:10.0.4")
-    implementation("org.asciidoctor:asciidoctor-gradle-jvm:4.0.3")
+    
+    // Build and deployment plugins  
     implementation("com.bmuschko:gradle-docker-plugin:9.4.0")
 }
