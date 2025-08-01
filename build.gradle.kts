@@ -22,7 +22,7 @@ repositories {
 // this task generates all tasks for sub-projects itself, therefor it just needs
 // to be applied on the root project, conventions are not working :-(
 tasks.dokkaHtmlMultiModule.configure {
-    outputDirectory.set(buildDir.resolve("dokka"))
+    outputDirectory.set(layout.buildDirectory.dir("dokka"))
 }
 
 dependencies {

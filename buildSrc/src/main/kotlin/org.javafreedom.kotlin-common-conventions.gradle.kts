@@ -43,7 +43,7 @@ detekt {
 dependencies {
     constraints {
         // Define dependency versions as constraints
-        implementation("org.apache.commons:commons-text:1.9")
+        implementation("org.apache.commons:commons-text:1.12.0")
     }
 
     // Align versions of all Kotlin components
@@ -53,8 +53,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     // Add additonal dependencies useful for development
-    implementation("io.github.microutils:kotlin-logging:2.1.21")
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
+    implementation("io.github.microutils:kotlin-logging:3.0.5")
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.28.1")
     testImplementation(kotlin("test"))
     testImplementation(kotlin("test-junit5"))
 

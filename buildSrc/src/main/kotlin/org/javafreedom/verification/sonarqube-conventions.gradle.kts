@@ -1,6 +1,6 @@
 package org.javafreedom.verification
 
-import org.sonarqube.gradle.SonarQubeTask
+import org.sonarqube.gradle.SonarExtension
 
 plugins {
     `java-library`
@@ -25,11 +25,11 @@ sonarqube {
         property("sonar.links.ci", "$github_project_url/actions")
         property("sonar.links.scm", github_project_url)
         property("sonar.links.issue", "$github_project_url/issues")
-        property("sonar.coverage.jacoco.xmlReportPaths", buildDir.resolve("reports/jacoco/aggregateJacocoTestReport/aggregateJacocoTestReport.xml"))
+        property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.dir("reports/jacoco/aggregateJacocoTestReport/aggregateJacocoTestReport.xml").get().asFile)
     }
 }
 
-tasks.withType<SonarQubeTask>().configureEach {
+tasks.matching { it.name == "sonar" }.configureEach {
     dependsOn(project.tasks.named("aggregateJacocoTestReport"))
 }
 

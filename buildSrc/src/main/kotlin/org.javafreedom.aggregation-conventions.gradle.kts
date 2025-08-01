@@ -1,6 +1,6 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import org.owasp.dependencycheck.reporting.ReportGenerator
-import org.sonarqube.gradle.SonarQubeTask
+import org.sonarqube.gradle.SonarExtension
 
 plugins {
     id("org.javafreedom.verification.jacoco-consumer-conventions")
@@ -39,7 +39,7 @@ subprojects {
     }
 
     if (this.name != "documentation") {
-        val reportsDir = this.buildDir.resolve("reports/detekt/detekt.xml").absolutePath
+        val reportsDir = this.layout.buildDirectory.dir("reports/detekt/detekt.xml").get().asFile.absolutePath
         val baseDir = this.projectDir
 
         val sonarTestSources = mutableListOf<String>()
@@ -55,7 +55,7 @@ subprojects {
             }
         }
 
-        tasks.withType<SonarQubeTask>().configureEach {
+        tasks.matching { it.name == "sonar" }.configureEach {
             shouldRunAfter("detekt")
         }
     }
@@ -63,8 +63,7 @@ subprojects {
 
 dependencyCheck {
     failBuildOnCVSS = 3F
-    formats = listOf(ReportGenerator.Format.HTML,
-        ReportGenerator.Format.JUNIT, ReportGenerator.Format.XML, ReportGenerator.Format.SARIF)
+    formats = listOf("HTML", "JUNIT", "XML", "SARIF")
     suppressionFile = "${rootProject.rootDir}/config/owasp/owasp-supression.xml"
 
     // remove plugin dependencies, for configs see
@@ -75,7 +74,6 @@ dependencyCheck {
             .filter { validConfigurations.contains(it) }
             .toList()
 
-    outputDirectory = buildDir
-        .resolve("reports")
+    outputDirectory = layout.buildDirectory.dir("reports").get().asFile
         .resolve("owasp").path
 }
