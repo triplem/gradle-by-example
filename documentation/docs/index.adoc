@@ -30,6 +30,8 @@ mid-size and larger projects:
 In another article I am going to explain on how to release such a project using semantic versioning and github-actions using the above mentioned
 steps/tasks.
 
+For insights into modern development practices, see also the link:ki-projekteinsatz-analyse.html[KI-Projekteinsatz Analyse] which documents the experience of using AI assistance for project modernization.
+
 Gradle mandates the usage of "conventions" in the buildSrc-Directory. If you do use a `gradle init`, and generate a multi-module project, some of
 those files are already generated automatically. In here we are going to use and extend those files, so that eg. integration tests are supported
 as well.
