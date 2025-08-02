@@ -200,7 +200,7 @@ jobs:
       - name: Build package
         uses: gradle/actions/setup-gradle@v3
         with:
-          arguments: aggregateDocumentation
+          arguments: aggregateDocumentation --no-configuration-cache
         env:
           revnumber: ${{ needs.release.outputs.revnumber }}
       - name: Publish documentation

@@ -1,10 +1,11 @@
-= KI-gestützte Gradle-Modernisierung: Stärken, Schwächen und eine wichtige Lehre
+= KI-gestützte Modernisierung
+Stärken, Schwächen und eine wichtige Lehre
 
 == Warum das Cut-off-Datum von KIs zählt
 
 Im Rahmen eines Projekts zur Modernisierung eines Kotlin-basierten Multi-Modul-Gradle-Builds wurde eine KI eingesetzt, um technische Altlasten zu entfernen, Codequalität zu verbessern und Tooling zu aktualisieren. Dabei zeigte sich: Künstliche Intelligenz kann vieles — aber nicht alles. Vor allem eine Grenze wurde deutlich sichtbar: Das *Trainings-Cut-off-Datum* der KI.
 
-Während die KI in der Lage war, systematisch OWASP-Abhängigkeiten zu entfernen, veraltete Gradle-Konfigurationen zu aktualisieren und eine vollständige Migration auf *Dokka V2* durchzuführen, stieß sie bei komplexeren technischen Herausforderungen wie *Gradles Provider API* oder bei Versionssprüngen an ihre Grenzen.
+Während die KI in der Lage war, systematisch Abhängigkeiten zu entfernen, veraltete Konfigurationen zu aktualisieren um im vorliegenden Fall eine vollständige Migration auf *Dokka V2* durchzuführen, stieß sie bei komplexeren technischen Herausforderungen wie *Gradles Provider API* oder bei Versionssprüngen an ihre Grenzen.
 
 Denn: Eine KI kennt neue Versionen oder veränderte APIs nur bis zu dem Stand, zu dem sie trainiert wurde. Alles, was danach veröffentlicht wurde, bleibt ihr unbekannt – *es sei denn, sie wird explizit darauf hingewiesen*.
 
@@ -41,9 +42,9 @@ Ein zentrales Muster: Die KI ging oft davon aus, dass schwierige Probleme komple
 
 == Empfehlungen: Mensch & KI als Team
 
-Der Bericht zeigt klar: Der optimale Einsatz von KI gelingt, wenn sie …
+Der Bericht zeigt klar: Der optimale Einsatz von KI gelingt, wenn die KI
 
-* *klar umrissene, wiederholbare Aufgaben* übernimmt (z. B. systematische Code-Transformationen),
+* *klar umrissene, wiederholbare Aufgaben* übernimmt (z.B. systematische Code-Transformationen),
 * *unter menschlicher Aufsicht* agiert, vor allem bei Architekturfragen,
 * und *ihre Limitationen offen kommunizieren kann* – was aktuell noch ein menschliches Monitoring erfordert.
 
@@ -51,7 +52,7 @@ Der Bericht zeigt klar: Der optimale Einsatz von KI gelingt, wenn sie …
 
 Der Einsatz der KI war insgesamt *erfolgreich*, aber nicht ohne Schwächen. Gerade bei technischen Herausforderungen, die nach dem Trainingszeitpunkt der KI entstanden sind, zeigte sich: *Aktualität ist ein strukturelles Defizit jeder KI*. Jedoch kann insbesondere das hier verwendete Claude Sonnet 4 durch entsprechende Internet Recherche Lösungen anbieten.
 
-Für Unternehmen heißt das: Wer moderne Software-Stacks pflegt, sollte KIs mit *aktuellen, datengetriebenen Tools wie Renovate oder Dependabot* kombinieren – und auf menschliche Expertise nicht verzichten.
+Für Unternehmen heißt das: Wer moderne Software-Stacks pflegt, sollte KIs mit *aktuellen, datengetriebenen Tools wie Renovate oder Dependabot* kombinieren – und auf menschliche Expertise nicht verzichten. Dennoch kann KI bereits jetzt den Entwicklungsprozess beschleunigen und insbesondere bei repititive Aufgaben den menschlichen Entwickler unterstützen.
 
 [IMPORTANT]
 ====
