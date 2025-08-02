@@ -6,3 +6,5 @@ build
 
 # Ignoer IntelliJ specific directory
 .idea
+
+.kotlin

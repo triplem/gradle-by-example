@@ -16,12 +16,14 @@ val dokkaGenerateTask = tasks.named("dokkaGenerate")
 val testReportTask = tasks.named("testReport")
 val jacocoReportTask = tasks.named("aggregateJacocoTestReport")
 val detektReportTask = tasks.named<Detekt>("aggregateDetekt")
+val rootDetektTask = tasks.named("detekt")
 
 tasks.register<Copy>("aggregateReports") {
     dependsOn(dokkaGenerateTask)
     dependsOn(testReportTask)
     dependsOn(jacocoReportTask)
     dependsOn(detektReportTask)
+    dependsOn(rootDetektTask)
 
     // Configure as proper Copy task for configuration cache compatibility
     destinationDir = layout.buildDirectory.dir("documentation").get().asFile
