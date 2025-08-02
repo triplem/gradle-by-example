@@ -23,7 +23,7 @@ Trotz ihrer Einschränkungen lieferte die KI in vielen Bereichen starke Ergebnis
 
 * *Systematische Analysen*: Alle OWASP-Referenzen wurden über Build-Skripte, CI-Konfigurationen und Dokumentation hinweg identifiziert und entfernt.
 * *Codequalität*: Sämtliche Detekt-Warnungen (6 von 6) wurden behoben.
-* *Modernisierung*: Migration auf aktuelle Tool-Versionen wie Dokka 2.0 erfolgte mit umfassender Recherche und zukunftssicherer Konfiguration.
+* *Modernisierung*: Migration auf aktuelle Tool-Versionen wie Dokka 2.0 erfolgte mit umfassender Recherche und zukunftssicherer Konfiguration. Auch hier musste die KI die neueste Version von Dokka recherchieren, dies führte aber zum Erfolg.
 * *Build-Optimierung*: Konfigurationsprobleme im Gradle Cache wurden von 46 auf 4 reduziert.
 
 == Schwächen: Komplexität, Kontext und Über-Engineering
@@ -49,7 +49,7 @@ Der Bericht zeigt klar: Der optimale Einsatz von KI gelingt, wenn sie …
 
 == Fazit
 
-Der Einsatz der KI war insgesamt *erfolgreich*, aber nicht ohne Schwächen. Gerade bei technischen Herausforderungen, die nach dem Trainingszeitpunkt der KI entstanden sind, zeigte sich: *Aktualität ist ein strukturelles Defizit jeder KI*.
+Der Einsatz der KI war insgesamt *erfolgreich*, aber nicht ohne Schwächen. Gerade bei technischen Herausforderungen, die nach dem Trainingszeitpunkt der KI entstanden sind, zeigte sich: *Aktualität ist ein strukturelles Defizit jeder KI*. Jedoch kann insbesondere das hier verwendete Claude Sonnet 4 durch entsprechende Internet Recherche Lösungen anbieten.
 
 Für Unternehmen heißt das: Wer moderne Software-Stacks pflegt, sollte KIs mit *aktuellen, datengetriebenen Tools wie Renovate oder Dependabot* kombinieren – und auf menschliche Expertise nicht verzichten.
 
