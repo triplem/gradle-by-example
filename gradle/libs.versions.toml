@@ -1,0 +1,80 @@
+[versions]
+# Language versions
+kotlin = "2.0.20"
+java = "21"
+
+# Testing frameworks
+junit = "5.11.0"
+assertk = "0.28.1"
+
+# Documentation
+dokka = "2.0.0"
+asciidoctor = "4.0.4"
+
+# Code quality and security
+detekt = "1.23.7"
+sonarqube = "5.1.0.4882"
+
+# Logging
+kotlin-logging = "3.0.5"
+slf4j = "2.0.16"
+
+# Utilities
+commons-text = "1.12.0"
+
+# Build and deployment
+docker = "9.4.0"
+
+[libraries]
+# Kotlin libraries
+kotlin-bom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlin" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
+kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+kotlin-test-junit5 = { group = "org.jetbrains.kotlin", name = "kotlin-test-junit5", version.ref = "kotlin" }
+
+# Gradle plugin libraries (for buildSrc)  
+kotlinGradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+dokkaGradlePlugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin", version.ref = "dokka" }
+asciidoctorGradlePlugin = { group = "org.asciidoctor", name = "asciidoctor-gradle-jvm", version.ref = "asciidoctor" }
+detektGradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
+sonarqubeGradlePlugin = { group = "org.sonarsource.scanner.gradle", name = "sonarqube-gradle-plugin", version.ref = "sonarqube" }
+dockerGradlePlugin = { group = "com.bmuschko", name = "gradle-docker-plugin", version.ref = "docker" }
+
+# Testing libraries
+junitJupiterApi = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junit" }
+junitJupiterEngine = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit" }
+assertkJvm = { group = "com.willowtreeapps.assertk", name = "assertk-jvm", version.ref = "assertk" }
+
+# Logging libraries
+kotlinLogging = { group = "io.github.microutils", name = "kotlin-logging", version.ref = "kotlin-logging" }
+slf4jApi = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
+
+# Utility libraries
+commonsText = { group = "org.apache.commons", name = "commons-text", version.ref = "commons-text" }
+
+[plugins]
+# Kotlin plugins
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+
+# Documentation plugins
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+asciidoctor = { id = "org.asciidoctor.jvm.convert", version.ref = "asciidoctor" }
+
+# Code quality and security plugins
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
+
+# Build and deployment plugins
+docker = { id = "com.bmuschko.docker-remote-api", version.ref = "docker" }
+
+# Test suite plugin
+jvm-test-suite = { id = "jvm-test-suite" }
+
+[bundles]
+# Testing bundle for common test dependencies
+testing = ["kotlin-test", "kotlin-test-junit5", "junitJupiterApi", "assertkJvm"]
+testingRuntime = ["junitJupiterEngine"]
+
+# Kotlin bundle for common Kotlin dependencies
+kotlinCommon = ["kotlin-stdlib", "kotlinLogging"]

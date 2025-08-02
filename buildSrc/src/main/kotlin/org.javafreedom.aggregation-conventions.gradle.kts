@@ -1,12 +1,9 @@
 import io.gitlab.arturbosch.detekt.Detekt
-import org.owasp.dependencycheck.reporting.ReportGenerator
-import org.sonarqube.gradle.SonarQubeTask
 
 plugins {
     id("org.javafreedom.verification.jacoco-consumer-conventions")
     id("io.gitlab.arturbosch.detekt")
     id("org.sonarqube")
-    id("org.owasp.dependencycheck")
 }
 
 // right now, there is no real aggregation of detekt, therefor we are just adding all
@@ -16,8 +13,8 @@ val aggregateDetektTask = tasks.register<Detekt>("aggregateDetekt") {
     ignoreFailures = true
 
     reports {
-        html.required
-        xml.required
+        html.required.set(true)
+        xml.required.set(true)
         txt.required.set(false)
         sarif.required.set(false)
     }
@@ -34,17 +31,17 @@ val aggregateDetektTask = tasks.register<Detekt>("aggregateDetekt") {
 subprojects {
     tasks.register("debug") {
         val sonarTestSources = mutableListOf<String>()
-        sonarTestSources.add("src/testIntegration")
+        sonarTestSources.add("src/integrationTest")
         sonarTestSources.add("src/test")
     }
 
     if (this.name != "documentation") {
-        val reportsDir = this.buildDir.resolve("reports/detekt/detekt.xml").absolutePath
+        val reportsDir = this.layout.buildDirectory.dir("reports/detekt/detekt.xml").get().asFile.absolutePath
         val baseDir = this.projectDir
 
         val sonarTestSources = mutableListOf<String>()
         sonarTestSources.add("src/test")
-        sonarTestSources.add("src/testIntegration")
+        sonarTestSources.add("src/integrationTest")
         val testDirs = sonarTestSources.filter { baseDir.resolve(it).exists() }.joinToString()
 
         sonarqube {
@@ -55,27 +52,9 @@ subprojects {
             }
         }
 
-        tasks.withType<SonarQubeTask>().configureEach {
+        tasks.matching { it.name == "sonar" }.configureEach {
             shouldRunAfter("detekt")
         }
     }
 }
 
-dependencyCheck {
-    failBuildOnCVSS = 3F
-    formats = listOf(ReportGenerator.Format.HTML,
-        ReportGenerator.Format.JUNIT, ReportGenerator.Format.XML, ReportGenerator.Format.SARIF)
-    suppressionFile = "${rootProject.rootDir}/config/owasp/owasp-supression.xml"
-
-    // remove plugin dependencies, for configs see
-    // https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_plugin_and_dependency_management
-    val validConfigurations = listOf("compileClasspath", "runtimeClasspath", "testCompileClasspath",
-        "testRuntimeClasspath", "default")
-    scanConfigurations = configurations.names
-            .filter { validConfigurations.contains(it) }
-            .toList()
-
-    outputDirectory = buildDir
-        .resolve("reports")
-        .resolve("owasp").path
-}

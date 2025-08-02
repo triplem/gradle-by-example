@@ -17,7 +17,10 @@ val revNumber = System.getenv()["revnumber"] ?: "DEV-Version"
 
 val asciidoctorTask = tasks.named<AsciidoctorTask>("asciidoctor") {
     setSourceDir(file("docs"))
-    setOutputDir(file("$buildDir/docs"))
+    setOutputDir(layout.buildDirectory.dir("docs"))
+    
+    // Asciidoctor plugin is not yet compatible with configuration cache
+    notCompatibleWithConfigurationCache("Asciidoctor plugin uses deprecated StartParameter API")
 
     resources {
         from("docs/resources") {

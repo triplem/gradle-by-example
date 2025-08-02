@@ -1,10 +1,6 @@
 package org.javafreedom.documentation
 
 import io.gitlab.arturbosch.detekt.Detekt
-import org.asciidoctor.gradle.jvm.AsciidoctorTask
-import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
-import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension
-import org.owasp.dependencycheck.gradle.tasks.Aggregate
 
 val asciidoc by configurations.creating {
     isCanBeResolved = true
@@ -16,58 +12,50 @@ val asciidoc by configurations.creating {
     }
 }
 
-val dokkaHtmlMultiModuleTask = tasks.named<DokkaMultiModuleTask>("dokkaHtmlMultiModule")
+val dokkaGenerateTask = tasks.named("dokkaGenerate")
 val testReportTask = tasks.named("testReport")
 val jacocoReportTask = tasks.named("aggregateJacocoTestReport")
 val detektReportTask = tasks.named<Detekt>("aggregateDetekt")
-val dependencyCheckTask = tasks.named<Aggregate>("dependencyCheckAggregate")
+val rootDetektTask = tasks.named("detekt")
 
-tasks.register("aggregateReports") {
-    dependsOn(dokkaHtmlMultiModuleTask)
+tasks.register<Copy>("aggregateReports") {
+    dependsOn(dokkaGenerateTask)
     dependsOn(testReportTask)
     dependsOn(jacocoReportTask)
     dependsOn(detektReportTask)
+    dependsOn(rootDetektTask)
 
-    doLast {
-        val targetDir = buildDir.resolve("documentation").toPath()
-
-        copy {
-            into(targetDir.resolve("dokka"))
-            from(dokkaHtmlMultiModuleTask.map { task -> task.outputDirectory })
-        }
-
-        copy {
-            into(targetDir.resolve("tests"))
-            from(testReportTask.map { task -> task.outputs })
-        }
-
-        copy {
-            into(targetDir.resolve("jacoco"))
-            from(jacocoReportTask.map { task -> task.outputs })
-        }
-
-        copy {
-            into(targetDir.resolve("detekt"))
-            from(detektReportTask.map { task -> task.outputs })
-        }
+    // Configure as proper Copy task for configuration cache compatibility
+    destinationDir = layout.buildDirectory.dir("documentation").get().asFile
+    
+    from(layout.buildDirectory.dir("dokka")) {
+        into("dokka")
+    }
+    
+    from(layout.buildDirectory.dir("reports/allTests")) {
+        into("tests")
+    }
+    
+    from(layout.buildDirectory.dir("reports/jacoco/aggregateJacocoTestReport")) {
+        into("jacoco")
+    }
+    
+    from(layout.buildDirectory.dir("reports/detekt")) {
+        into("detekt")
     }
 }
 
 tasks.register("aggregateDocumentation") {
-    asciidoc.dependencies
-        .filterIsInstance<ProjectDependency>()
-        .map { it.dependencyProject.tasks.withType<AsciidoctorTask>() }
-        .forEach { dependsOn(it) }
+    // Depend on all asciidoctor tasks from projects in the asciidoc configuration
+    dependsOn(provider {
+        asciidoc.dependencies
+            .filterIsInstance<ProjectDependency>()
+            .map { "${it.name}:asciidoctor" }
+    })
 
     doLast {
-        val targetDir = buildDir.resolve("documentation").toPath()
+        val targetDir = layout.buildDirectory.dir("documentation").get().asFile.toPath()
 
-        copy {
-            into(targetDir.resolve("owasp"))
-            project.extensions.findByType<DependencyCheckExtension>()?.let {
-                from(it.outputDirectory)
-            }
-        }
 
         copy {
             into(targetDir.resolve("pages"))

@@ -4,7 +4,9 @@
 package org.javafreedom.list
 
 import assertk.assertThat
-import assertk.assertions.*
+import assertk.assertions.isEqualTo
+import assertk.assertions.isFalse
+import assertk.assertions.isTrue
 import mu.KotlinLogging
 import kotlin.test.Test
 

@@ -15,7 +15,7 @@ val testReportData by configurations.creating {
 }
 
 val testReportTask = tasks.register<TestReport>("testReport") {
-    destinationDirectory.set(file("$buildDir/reports/allTests"))
+    destinationDirectory.set(layout.buildDirectory.dir("reports/allTests"))
     // Use test results from testReportData configuration
     (getTestResults() as ConfigurableFileCollection)
         .from(testReportData.incoming.artifactView { lenient(true) }.files)

@@ -1,12 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.*
-import java.util.Properties
 
-val properties = Properties().also { props ->
-    project.projectDir.resolveSibling("../gradle.properties").bufferedReader().use {
-        props.load(it)
-    }
-}
-val junitVersion: String = properties.getProperty("junitVersion")
+val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
 
 plugins {
     java
@@ -25,13 +19,14 @@ repositories {
 
 // Latest Java LTS Version
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.majorVersion
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
     }
 }
 
@@ -40,27 +35,23 @@ detekt {
     ignoreFailures = true
 }
 
+
 dependencies {
     constraints {
         // Define dependency versions as constraints
-        implementation("org.apache.commons:commons-text:1.9")
+        implementation(libs.findLibrary("commonsText").get())
     }
 
     // Align versions of all Kotlin components
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+    implementation(platform(libs.findLibrary("kotlin-bom").get()))
 
-    // Use the Kotlin JDK 8 standard library.
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    // Use the Kotlin standard library
+    implementation(libs.findLibrary("kotlin-stdlib").get())
 
-    // Add additonal dependencies useful for development
-    implementation("io.github.microutils:kotlin-logging:2.1.21")
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
-    testImplementation(kotlin("test"))
-    testImplementation(kotlin("test-junit5"))
-
-    // Use JUnit Jupiter API for testing.
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
-
-    // Use JUnit Jupiter Engine for testing.
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    // Add additional dependencies useful for development
+    implementation(libs.findLibrary("kotlinLogging").get())
+    
+    // Testing dependencies
+    testImplementation(libs.findBundle("testing").get())
+    testRuntimeOnly(libs.findBundle("testingRuntime").get())
 }
