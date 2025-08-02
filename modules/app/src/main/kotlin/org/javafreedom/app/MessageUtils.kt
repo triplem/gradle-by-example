@@ -3,8 +3,8 @@
  */
 package org.javafreedom.app
 
-class MessageUtils {
-    companion object {
-        fun getMessage(): String = "Hello      World!"
-    }
+object MessageUtils {
+    const val MESSAGE = "Hello      World!"
+    
+    fun getMessage(): String = MESSAGE
 }

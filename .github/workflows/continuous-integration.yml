@@ -65,7 +65,7 @@ jobs:
       - name: Run tests
         uses: gradle/actions/setup-gradle@v3
         with:
-          arguments: clean check sonarqube aggregateReports
+          arguments: clean check sonar aggregateReports
           cache-read-only: false
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
