@@ -13,6 +13,17 @@ plugins {
 
 allprojects {
     group = "org.javafreedom.gradle"
+    
+    configurations.all {
+        resolutionStrategy {
+            force("org.junit:junit-bom:5.11.0")
+            eachDependency {
+                if (requested.group == "org.junit" && requested.name == "junit-bom") {
+                    useVersion("5.11.0")
+                }
+            }
+        }
+    }
 }
 
 repositories {
