@@ -9,7 +9,7 @@ assertk = "0.28.1"
 
 # Documentation
 dokka = "2.0.0"
-asciidoctor = "4.0.3"
+asciidoctor = "4.0.4"
 
 # Code quality and security
 detekt = "1.23.7"
