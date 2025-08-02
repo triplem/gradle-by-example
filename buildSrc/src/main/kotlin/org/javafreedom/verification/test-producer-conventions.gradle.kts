@@ -85,7 +85,6 @@ configurations.create("binaryTestResultsElements") {
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
     testLogging {
-        useJUnitPlatform()
         events = setOf(
             TestLogEvent.FAILED,
             TestLogEvent.PASSED,
@@ -97,4 +96,8 @@ tasks.withType<Test>().configureEach {
         showCauses = true
         showStackTraces = true
     }
+    
+    // Ensure test events are properly reported to IDEs
+    systemProperty("junit.jupiter.execution.parallel.enabled", "false")
+    systemProperty("junit.jupiter.testinstance.lifecycle.default", "per_class")
 }

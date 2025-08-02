@@ -16,7 +16,7 @@ plugins {
 
 // Do not generate reports for individual projects
 tasks.jacocoTestReport {
-    enabled = false
+    isEnabled = false
 }
 
 val sourcesets = project.extensions.getByType(SourceSetContainer::class)

@@ -13,8 +13,8 @@ val aggregateDetektTask = tasks.register<Detekt>("aggregateDetekt") {
     ignoreFailures = true
 
     reports {
-        html.required
-        xml.required
+        html.required.set(true)
+        xml.required.set(true)
         txt.required.set(false)
         sarif.required.set(false)
     }

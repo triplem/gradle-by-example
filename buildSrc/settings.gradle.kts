@@ -1,3 +1,5 @@
+rootProject.name = "gradle-by-example-buildSrc"
+
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {

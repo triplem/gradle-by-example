@@ -19,7 +19,7 @@ sonarqube {
         property("sonar.organization", System.getenv()["SONAR_ORGANIZATION"] ?: github_org)
         property("sonar.projectVersion", rootProject.version.toString())
         property("sonar.host.url", System.getenv()["SONAR_HOST_URL"] ?: "https://sonarcloud.io")
-        property("sonar.login", System.getenv()["SONAR_TOKEN"] ?: "" )
+        property("sonar.token", System.getenv()["SONAR_TOKEN"] ?: "" )
         property("sonar.scm.provider", "git")
         property("sonar.links.homepage", github_project_url)
         property("sonar.links.ci", "$github_project_url/actions")

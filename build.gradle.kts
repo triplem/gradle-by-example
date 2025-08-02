@@ -19,7 +19,7 @@ repositories {
     mavenCentral()
 }
 
-// this task generates all tasks for sub-projects itself, therefor it just needs
+// this task generates all tasks for subprojects itself, therefor it just needs
 // to be applied on the root project, conventions are not working :-(
 tasks.dokkaHtmlMultiModule.configure {
     outputDirectory.set(layout.buildDirectory.dir("dokka"))
