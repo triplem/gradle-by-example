@@ -19,14 +19,3 @@ image:{img-sonarcloud}[Sonarcloud Status,link={uri-sonarcloud}]
 image:{img-actions}[CI Workflow]
 
 link:https://github.com/users/triplem/packages/container/package/gradle-by-example[docker package]
-
-== Verify dependencies
-
-If dependencies are updated, please run
-
-[source,bash]
-----
-./gradlew --write-verification-metadata pgp,sha256 --export-keys
-----
-
-This will create a verfication.xml, which does show, that all dependencies are verified.
