@@ -1,16 +1,21 @@
 = KI-Projekteinsatz Analyse: Gradle-Projekt-Modernisierung
-:toc: left
-:toclevels: 3
-:source-highlighter: rouge
-:icons: font
+
+:imagesdir: resources/
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
 
 == Überblick
 
-Dieses Dokument analysiert einen Projekteinsatz, bei dem eine KI zur Modernisierung eines bestehenden Gradle-basierten Kotlin-Projekts eingesetzt wurde. Der Fokus lag auf der Entfernung veralteter Abhängigkeiten, der Behebung von Code-Qualitätsproblemen und der Aktualisierung auf moderne Tooling-Versionen.
+Dieses Dokument analysiert ein Projekt, bei dem eine KI zur Modernisierung eines bestehenden Gradle-basierten Kotlin-Projekts eingesetzt wurde. Der Fokus lag auf der Entfernung veralteter Abhängigkeiten, der Behebung von Code-Qualitätsproblemen und der Aktualisierung auf moderne Tooling-Versionen und deren Konfigurationen.
 
 == Projektkontext
 
-Das zu modernisierende Projekt war ein Multi-Modul-Gradle-Build mit:
+Das zu modernisierende Projekt ist ein Multi-Modul-Gradle-Build mit:
 
 * Kotlin-Code in mehreren Modulen
 * Dokumentationsgenerierung mit Dokka und Asciidoctor  
