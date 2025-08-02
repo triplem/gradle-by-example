@@ -43,7 +43,6 @@ dependencies {
     implementation(libs.findLibrary("detektGradlePlugin").get()) {
         exclude(group = "org.jetbrains.kotlin", module = "kotlin-stdlib-jdk8")
     }
-    implementation(libs.findLibrary("owaspDependencyCheckGradlePlugin").get())
     
     // Build and deployment plugins  
     implementation(libs.findLibrary("dockerGradlePlugin").get())

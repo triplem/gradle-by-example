@@ -4,7 +4,6 @@ plugins {
     id("org.javafreedom.verification.jacoco-consumer-conventions")
     id("io.gitlab.arturbosch.detekt")
     id("org.sonarqube")
-    id("org.owasp.dependencycheck")
 }
 
 // right now, there is no real aggregation of detekt, therefor we are just adding all
@@ -59,19 +58,3 @@ subprojects {
     }
 }
 
-dependencyCheck {
-    failBuildOnCVSS = 3F
-    formats = listOf("HTML", "JUNIT", "XML", "SARIF")
-    suppressionFile = "${rootProject.rootDir}/config/owasp/owasp-supression.xml"
-
-    // remove plugin dependencies, for configs see
-    // https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_plugin_and_dependency_management
-    val validConfigurations = listOf("compileClasspath", "runtimeClasspath", "testCompileClasspath",
-        "testRuntimeClasspath", "default")
-    scanConfigurations = configurations.names
-            .filter { validConfigurations.contains(it) }
-            .toList()
-
-    outputDirectory = layout.buildDirectory.dir("reports").get().asFile
-        .resolve("owasp").path
-}

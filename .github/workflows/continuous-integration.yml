@@ -89,15 +89,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-      - name: Check OWASP
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          arguments: clean dependencyCheckAnalyze
-      - name: Upload owasp-report results
-        uses: actions/upload-artifact@v4
-        with:
-          name: owasp-reports
-          path: build/reports/owasp
       - name: Build package
         uses: gradle/actions/setup-gradle@v3
         with:
@@ -204,11 +195,6 @@ jobs:
         with:
           name: documentation
           path: build/documentation
-      - name: Download owasp reports
-        uses: actions/download-artifact@v4
-        with:
-          name: owasp-reports
-          path: build/reports/owasp
       - name: Build package
         uses: gradle/actions/setup-gradle@v3
         with:

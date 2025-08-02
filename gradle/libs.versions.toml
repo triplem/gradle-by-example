@@ -14,7 +14,6 @@ asciidoctor = "4.0.3"
 # Code quality and security
 detekt = "1.23.7"
 sonarqube = "5.1.0.4882"
-owasp-dependency-check = "10.0.4"
 
 # Logging
 kotlin-logging = "3.0.5"
@@ -40,7 +39,6 @@ dokkaGradlePlugin = { group = "org.jetbrains.dokka", name = "dokka-gradle-plugin
 asciidoctorGradlePlugin = { group = "org.asciidoctor", name = "asciidoctor-gradle-jvm", version.ref = "asciidoctor" }
 detektGradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
 sonarqubeGradlePlugin = { group = "org.sonarsource.scanner.gradle", name = "sonarqube-gradle-plugin", version.ref = "sonarqube" }
-owaspDependencyCheckGradlePlugin = { group = "org.owasp", name = "dependency-check-gradle", version.ref = "owasp-dependency-check" }
 dockerGradlePlugin = { group = "com.bmuschko", name = "gradle-docker-plugin", version.ref = "docker" }
 
 # Testing libraries
@@ -66,7 +64,6 @@ asciidoctor = { id = "org.asciidoctor.jvm.convert", version.ref = "asciidoctor" 
 # Code quality and security plugins
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 sonarqube = { id = "org.sonarqube", version.ref = "sonarqube" }
-owasp-dependency-check = { id = "org.owasp.dependencycheck", version.ref = "owasp-dependency-check" }
 
 # Build and deployment plugins
 docker = { id = "com.bmuschko.docker-remote-api", version.ref = "docker" }

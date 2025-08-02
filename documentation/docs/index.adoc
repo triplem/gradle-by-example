@@ -25,7 +25,6 @@ mid-size and larger projects:
 * Dokka Pages as well as an aggregation of those
 * Jacoco Reports (inclusive an aggregated report for all sub-projects)
 * Sonarqube Reporting
-* OWASP Dependency Check
 * Asciidoctor Documentation
 
 In another article I am going to explain on how to release such a project using semantic versioning and github-actions using the above mentioned

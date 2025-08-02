@@ -2,8 +2,6 @@ package org.javafreedom.documentation
 
 import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
-import org.owasp.dependencycheck.gradle.extension.DependencyCheckExtension
-import org.owasp.dependencycheck.gradle.tasks.Aggregate
 
 val asciidoc by configurations.creating {
     isCanBeResolved = true
@@ -19,7 +17,6 @@ val dokkaHtmlMultiModuleTask = tasks.named<DokkaMultiModuleTask>("dokkaHtmlMulti
 val testReportTask = tasks.named("testReport")
 val jacocoReportTask = tasks.named("aggregateJacocoTestReport")
 val detektReportTask = tasks.named<Detekt>("aggregateDetekt")
-val dependencyCheckTask = tasks.named<Aggregate>("dependencyCheckAggregate")
 
 tasks.register("aggregateReports") {
     dependsOn(dokkaHtmlMultiModuleTask)
@@ -63,12 +60,6 @@ tasks.register("aggregateDocumentation") {
     doLast {
         val targetDir = layout.buildDirectory.dir("documentation").get().asFile.toPath()
 
-        copy {
-            into(targetDir.resolve("owasp"))
-            project.extensions.findByType<DependencyCheckExtension>()?.let {
-                from(it.outputDirectory)
-            }
-        }
 
         copy {
             into(targetDir.resolve("pages"))
