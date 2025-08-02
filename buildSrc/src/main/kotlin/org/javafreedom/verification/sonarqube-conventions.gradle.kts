@@ -13,7 +13,9 @@ sonar {
         // See https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Gradle#AnalyzingwithSonarQubeScannerforGradle-Configureanalysisproperties
         property("sonar.sourceEncoding", "UTF-8")
         property("sonar.projectName", rootProject.name)
-        property("sonar.projectKey", System.getenv()["SONAR_PROJECT_KEY"] ?: rootProject.name)
+        property("sonar.projectKey",
+            System.getenv()["SONAR_PROJECT_KEY"] ?: (github_org + "_" + rootProject.name)
+        )
         property("sonar.organization", System.getenv()["SONAR_ORGANIZATION"] ?: github_org)
         property("sonar.projectVersion", rootProject.version.toString())
         property("sonar.host.url", System.getenv()["SONAR_HOST_URL"] ?: "https://sonarcloud.io")

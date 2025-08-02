@@ -17,34 +17,29 @@ val testReportTask = tasks.named("testReport")
 val jacocoReportTask = tasks.named("aggregateJacocoTestReport")
 val detektReportTask = tasks.named<Detekt>("aggregateDetekt")
 
-tasks.register("aggregateReports") {
+tasks.register<Copy>("aggregateReports") {
     dependsOn(dokkaGenerateTask)
     dependsOn(testReportTask)
     dependsOn(jacocoReportTask)
     dependsOn(detektReportTask)
 
-    doLast {
-        val targetDir = layout.buildDirectory.dir("documentation").get().asFile.toPath()
-
-        copy {
-            into(targetDir.resolve("dokka"))
-            from(layout.buildDirectory.dir("dokka"))
-        }
-
-        copy {
-            into(targetDir.resolve("tests"))
-            from(testReportTask.map { task -> task.outputs })
-        }
-
-        copy {
-            into(targetDir.resolve("jacoco"))
-            from(jacocoReportTask.map { task -> task.outputs })
-        }
-
-        copy {
-            into(targetDir.resolve("detekt"))
-            from(detektReportTask.map { task -> task.outputs })
-        }
+    // Configure as proper Copy task for configuration cache compatibility
+    destinationDir = layout.buildDirectory.dir("documentation").get().asFile
+    
+    from(layout.buildDirectory.dir("dokka")) {
+        into("dokka")
+    }
+    
+    from(layout.buildDirectory.dir("reports/allTests")) {
+        into("tests")
+    }
+    
+    from(layout.buildDirectory.dir("reports/jacoco/aggregateJacocoTestReport")) {
+        into("jacoco")
+    }
+    
+    from(layout.buildDirectory.dir("reports/detekt")) {
+        into("detekt")
     }
 }
 
