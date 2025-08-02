@@ -69,7 +69,7 @@ class LinkedList {
         return size
     }
 
-    fun get(idx: Int): String {
+    operator fun get(idx: Int): String {
         var index = idx
         var it = head
         while (index > 0 && it != null) {

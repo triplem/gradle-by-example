@@ -12,7 +12,7 @@ object JoinUtils {
             if (result.isNotEmpty()) {
                 result.append(" ")
             }
-            result.append(source.get(i))
+            result.append(source[i])
         }
 
         return result.toString()
