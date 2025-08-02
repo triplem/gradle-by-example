@@ -1,7 +1,6 @@
 package org.javafreedom.documentation
 
 import io.gitlab.arturbosch.detekt.Detekt
-import org.jetbrains.dokka.gradle.DokkaMultiModuleTask
 
 val asciidoc by configurations.creating {
     isCanBeResolved = true
@@ -13,13 +12,13 @@ val asciidoc by configurations.creating {
     }
 }
 
-val dokkaHtmlMultiModuleTask = tasks.named<DokkaMultiModuleTask>("dokkaHtmlMultiModule")
+val dokkaGenerateTask = tasks.named("dokkaGenerate")
 val testReportTask = tasks.named("testReport")
 val jacocoReportTask = tasks.named("aggregateJacocoTestReport")
 val detektReportTask = tasks.named<Detekt>("aggregateDetekt")
 
 tasks.register("aggregateReports") {
-    dependsOn(dokkaHtmlMultiModuleTask)
+    dependsOn(dokkaGenerateTask)
     dependsOn(testReportTask)
     dependsOn(jacocoReportTask)
     dependsOn(detektReportTask)
@@ -29,7 +28,7 @@ tasks.register("aggregateReports") {
 
         copy {
             into(targetDir.resolve("dokka"))
-            from(dokkaHtmlMultiModuleTask.map { task -> task.outputDirectory })
+            from(layout.buildDirectory.dir("dokka"))
         }
 
         copy {

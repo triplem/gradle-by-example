@@ -35,6 +35,7 @@ detekt {
     ignoreFailures = true
 }
 
+
 dependencies {
     constraints {
         // Define dependency versions as constraints
