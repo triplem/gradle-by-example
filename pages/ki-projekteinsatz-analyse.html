@@ -5,7 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.18">
-<title>Semantic Release für gradle Projekte</title>
+<meta name="author" content="Stärken, Schwächen und eine wichtige Lehre">
+<title>KI-gestützte Modernisierung</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -435,365 +436,168 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 #footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
 @media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
 </style>
-<style>
-pre.rouge table td { padding: 5px; }
-pre.rouge table pre { margin: 0; }
-pre.rouge .cm {
-  color: #999988;
-  font-style: italic;
-}
-pre.rouge .cp {
-  color: #999999;
-  font-weight: bold;
-}
-pre.rouge .c1 {
-  color: #999988;
-  font-style: italic;
-}
-pre.rouge .cs {
-  color: #999999;
-  font-weight: bold;
-  font-style: italic;
-}
-pre.rouge .c, pre.rouge .ch, pre.rouge .cd, pre.rouge .cpf {
-  color: #999988;
-  font-style: italic;
-}
-pre.rouge .err {
-  color: #a61717;
-  background-color: #e3d2d2;
-}
-pre.rouge .gd {
-  color: #000000;
-  background-color: #ffdddd;
-}
-pre.rouge .ge {
-  color: #000000;
-  font-style: italic;
-}
-pre.rouge .gr {
-  color: #aa0000;
-}
-pre.rouge .gh {
-  color: #999999;
-}
-pre.rouge .gi {
-  color: #000000;
-  background-color: #ddffdd;
-}
-pre.rouge .go {
-  color: #888888;
-}
-pre.rouge .gp {
-  color: #555555;
-}
-pre.rouge .gs {
-  font-weight: bold;
-}
-pre.rouge .gu {
-  color: #aaaaaa;
-}
-pre.rouge .gt {
-  color: #aa0000;
-}
-pre.rouge .kc {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kd {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kn {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kp {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kr {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .kt {
-  color: #445588;
-  font-weight: bold;
-}
-pre.rouge .k, pre.rouge .kv {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .mf {
-  color: #009999;
-}
-pre.rouge .mh {
-  color: #009999;
-}
-pre.rouge .il {
-  color: #009999;
-}
-pre.rouge .mi {
-  color: #009999;
-}
-pre.rouge .mo {
-  color: #009999;
-}
-pre.rouge .m, pre.rouge .mb, pre.rouge .mx {
-  color: #009999;
-}
-pre.rouge .sa {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .sb {
-  color: #d14;
-}
-pre.rouge .sc {
-  color: #d14;
-}
-pre.rouge .sd {
-  color: #d14;
-}
-pre.rouge .s2 {
-  color: #d14;
-}
-pre.rouge .se {
-  color: #d14;
-}
-pre.rouge .sh {
-  color: #d14;
-}
-pre.rouge .si {
-  color: #d14;
-}
-pre.rouge .sx {
-  color: #d14;
-}
-pre.rouge .sr {
-  color: #009926;
-}
-pre.rouge .s1 {
-  color: #d14;
-}
-pre.rouge .ss {
-  color: #990073;
-}
-pre.rouge .s, pre.rouge .dl {
-  color: #d14;
-}
-pre.rouge .na {
-  color: #008080;
-}
-pre.rouge .bp {
-  color: #999999;
-}
-pre.rouge .nb {
-  color: #0086B3;
-}
-pre.rouge .nc {
-  color: #445588;
-  font-weight: bold;
-}
-pre.rouge .no {
-  color: #008080;
-}
-pre.rouge .nd {
-  color: #3c5d5d;
-  font-weight: bold;
-}
-pre.rouge .ni {
-  color: #800080;
-}
-pre.rouge .ne {
-  color: #990000;
-  font-weight: bold;
-}
-pre.rouge .nf, pre.rouge .fm {
-  color: #990000;
-  font-weight: bold;
-}
-pre.rouge .nl {
-  color: #990000;
-  font-weight: bold;
-}
-pre.rouge .nn {
-  color: #555555;
-}
-pre.rouge .nt {
-  color: #000080;
-}
-pre.rouge .vc {
-  color: #008080;
-}
-pre.rouge .vg {
-  color: #008080;
-}
-pre.rouge .vi {
-  color: #008080;
-}
-pre.rouge .nv, pre.rouge .vm {
-  color: #008080;
-}
-pre.rouge .ow {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .o {
-  color: #000000;
-  font-weight: bold;
-}
-pre.rouge .w {
-  color: #bbbbbb;
-}
-pre.rouge {
-  background-color: #f8f8f8;
-}
-</style>
 </head>
-<body class="article">
+<body class="article toc2 toc-left">
 <div id="header">
-<h1>Semantic Release für gradle Projekte</h1>
+<h1>KI-gestützte Modernisierung</h1>
 <div class="details">
+<span id="author" class="author">Stärken, Schwächen und eine wichtige Lehre</span><br>
 <span id="revnumber">version 2.0.1,</span>
 <span id="revdate">2025-08-02</span>
 </div>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#warum-das-cut-off-datum-von-kis-zählt">Warum das Cut-off-Datum von KIs zählt</a></li>
+<li><a href="#automatisierte-tools-als-alternative-renovate-dependabot">Automatisierte Tools als Alternative: Renovate &amp; Dependabot</a></li>
+<li><a href="#ki-stärken-im-projekt">KI-Stärken im Projekt</a></li>
+<li><a href="#schwächen-komplexität-kontext-und-über-engineering">Schwächen: Komplexität, Kontext und Über-Engineering</a></li>
+<li><a href="#empfehlungen-mensch-ki-als-team">Empfehlungen: Mensch &amp; KI als Team</a></li>
+<li><a href="#fazit">Fazit</a></li>
+</ul>
+</div>
 </div>
 <div id="content">
+<div class="sect1">
+<h2 id="warum-das-cut-off-datum-von-kis-zählt">Warum das Cut-off-Datum von KIs zählt</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Bereits 1997 hat Eric S. Raymond in seinem Essay "<a href="https://de.wikipedia.org/wiki/Die_Kathedrale_und_der_Basar">Die Kathedrale und der Basar</a>" den Leitsatz "Release early, release often" geprägt.
-Mit dem DevOps-Paradigma ist das Continuous Delivery Konzept, das eben diesem Leitsatz folgt, aktueller den je.
-In der aktuellen Software-Entwicklung geht es also auch darum, Releases reibungslos erstellen zu können.
-Damit dies funktioniert, muss der Erstellungs-Prozess für ein Release einfach, reproduzierbar und automatisiert sein.</p>
+<p>Im Rahmen eines Projekts zur Modernisierung eines Kotlin-basierten Multi-Modul-Gradle-Builds wurde eine KI eingesetzt, um technische Altlasten zu entfernen, Codequalität zu verbessern und Tooling zu aktualisieren. Dabei zeigte sich: Künstliche Intelligenz kann vieles — aber nicht alles. Vor allem eine Grenze wurde deutlich sichtbar: Das <strong>Trainings-Cut-off-Datum</strong> der KI.</p>
 </div>
 <div class="paragraph">
-<p>Um Releases ein-eindeutig identifizeren und referenzieren zu können, wird eine Namensgebung für Versionen benötigt.
-Dazu hat sich das <a href="https://semver.org/">Semantic Versioning</a> durchgesetzt.
-Semantic Versioning definiert, wie eine Versionnummer aufgebaut und inkrementiert wird.</p>
+<p>Während die KI in der Lage war, systematisch Abhängigkeiten zu entfernen, veraltete Konfigurationen zu aktualisieren um im vorliegenden Fall eine vollständige Migration auf <strong>Dokka V2</strong> durchzuführen, stieß sie bei komplexeren technischen Herausforderungen wie <strong>Gradles Provider API</strong> oder bei Versionssprüngen an ihre Grenzen.</p>
 </div>
 <div class="paragraph">
-<p>Durch die Verwendung von <a href="https://www.conventionalcommits.org/">Conventional Commits</a> können Entwickler mit Commit-Messages angeben, welcher Teil einer Version inkrementiert werden soll.
-Dies bietet den Vorteil, das Änderungen am Code direkt dokumentiert werden und in dem Changelog eines Projektes dann automatisch aufgelistet werden können.
-Die Spezifikation enthält Vorgaben, wie die Commit-Messages angelegt werden müssen.</p>
+<p>Denn: Eine KI kennt neue Versionen oder veränderte APIs nur bis zu dem Stand, zu dem sie trainiert wurde. Alles, was danach veröffentlicht wurde, bleibt ihr unbekannt – <strong>es sei denn, sie wird explizit darauf hingewiesen</strong>.</p>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="automatisierte-tools-als-alternative-renovate-dependabot">Automatisierte Tools als Alternative: Renovate &amp; Dependabot</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Einige Schlüssel-Begriffe der Conventional-Commits sind:</p>
+<p>Gerade bei der reinen Aktualisierung von Abhängigkeiten und Plugins bieten sich daher spezialisierte Werkzeuge wie <strong>Renovate</strong> oder <strong>Dependabot</strong> an. Diese Tools agieren nicht auf Basis statischer Wissensstände, sondern analysieren live verfügbare Paketinformationen und Changelogs. Sie schlagen Updates automatisiert und zuverlässig vor – inklusive Versionshinweisen und Kompatibilitätswarnungen.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Für reine Versionserneuerungen sind diese Tools der KI überlegen, da sie stets auf dem aktuellen Stand sind. Der Mehrwert einer KI liegt eher in der strukturierten Analyse, Refaktorierung und Codequalität – nicht im Erkennen neuester Versionen.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="ki-stärken-im-projekt">KI-Stärken im Projekt</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Trotz ihrer Einschränkungen lieferte die KI in vielen Bereichen starke Ergebnisse:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>fix</p>
+<p><strong>Systematische Analysen</strong>: Alle OWASP-Referenzen wurden über Build-Skripte, CI-Konfigurationen und Dokumentation hinweg identifiziert und entfernt.</p>
 </li>
 <li>
-<p>feat</p>
+<p><strong>Codequalität</strong>: Sämtliche Detekt-Warnungen (6 von 6) wurden behoben.</p>
 </li>
 <li>
-<p>BREAKING CHANGE</p>
+<p><strong>Modernisierung</strong>: Migration auf aktuelle Tool-Versionen wie Dokka 2.0 erfolgte mit umfassender Recherche und zukunftssicherer Konfiguration. Auch hier musste die KI die neueste Version von Dokka recherchieren, dies führte aber zum Erfolg.</p>
+</li>
+<li>
+<p><strong>Build-Optimierung</strong>: Konfigurationsprobleme im Gradle Cache wurden von 46 auf 4 reduziert.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p>Mit diesen Präfixes in den Commit Messages wird entschieden, welcher Teil einer Versionsnummer inkrementiert wird.
-Somit können dann, im Rahmen des Continouus Deployment-Strategie, Builds automatisch gestartet und mit der daraus gewonnenen Versionnummer publiziert werden.</p>
 </div>
-<div class="paragraph">
-<p>Um den Release Prozess mit den vorgenannten Spezifikationen zu automatisieren, gibt es im Javascript-Bereich das
-<a href="https://semantic-release.gitbook.io/semantic-release/">Semantic Release</a> Toolset.
-Dieses Toolset ist zwar für Javascript gebaut und optimiert, kann jedoch auch in anderen Umgebungen eingesetzt werden.
-Hier möchte ich auf die Verwendung in einem Java-Projekt, das mit Gradle gebaut wird, eingehen.</p>
 </div>
+<div class="sect1">
+<h2 id="schwächen-komplexität-kontext-und-über-engineering">Schwächen: Komplexität, Kontext und Über-Engineering</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>In gradle wird für das Publizieren von Artefakten das <a href="https://docs.gradle.org/current/userguide/publishing_ivy.html">Ivy Publish Plugin</a>
-oder das <a href="https://docs.gradle.org/current/userguide/publishing_maven.html">Maven Publish Plugin</a> verwenden.
-Im Prinzip arbeiten beide Plugins ähnlich und unterscheiden sich vor allem in den verwendeten Metadaten der Repositories.
-Im folgenden wird das Maven Plugin verwendet, da diese Repositories häufig anzutreffen sind.</p>
-</div>
-<div class="paragraph">
-<p>Für eine ein-eindeutige Identifikation der Artefakte werden in gradle die folgenden Properties benötigt:</p>
+<p>In einigen Bereichen war jedoch <strong>menschliches Eingreifen erforderlich</strong>, insbesondere bei:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>groupId</p>
+<p><strong>Typ-Fehlern in Gradle (z. B. JaCoCo)</strong>: Die KI probierte wiederholt komplexe Varianten des gleichen fehlerhaften Ansatzes – statt ihn grundsätzlich zu überdenken.</p>
 </li>
 <li>
-<p>artefactId</p>
+<p><strong>Kontextualität</strong>: Änderungen an Task-Namen wurden an anderer Stelle nicht korrekt mitgezogen.</p>
 </li>
 <li>
-<p>version</p>
+<p><strong>Over-Engineering</strong>: Einfache Probleme wurden unnötig kompliziert gelöst.</p>
 </li>
 </ul>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
 <div class="paragraph">
-<p>Die Version wird hier von dem Semantic Release Toolset generiert und über die Kommandozeile an gradle übergeben.
-Um dies zu ermöglichen, darf das Version-Property nicht in der build.gradle definiert sein.
-In unserem Beispiel wird dieses Property gar nicht in gradle definiert, die Versionierung erfolgt ausschließlich über das Semantic Release, basierend auf den bereits gesetzten Tags und den Commit-Messages.</p>
+<p>Ein zentrales Muster: Die KI ging oft davon aus, dass schwierige Probleme komplexe Lösungen benötigen — was nicht immer der Fall war.</p>
 </div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="empfehlungen-mensch-ki-als-team">Empfehlungen: Mensch &amp; KI als Team</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>Das Semantic Release Toolset verwendet die Datei .releaserc (andere Dateien bzw.
-Formate können <a href="https://semantic-release.gitbook.io/semantic-release/usage/configuration">hier</a>
-eingesehen werden) um den Prozess zu steuern.
-Beispielhaft kann das dann wie folgt aussehen:</p>
+<p>Der Bericht zeigt klar: Der optimale Einsatz von KI gelingt, wenn die KI</p>
 </div>
-<div class="listingblock">
-<div class="title">releaserc</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="json"><span class="p">{</span><span class="w">
-    </span><span class="nl">"branches"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"master"</span><span class="p">],</span><span class="w">
-    </span><span class="nl">"plugins"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-        </span><span class="s2">"@semantic-release/commit-analyzer"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"@semantic-release/release-notes-generator"</span><span class="p">,</span><span class="w">
-        </span><span class="p">[</span><span class="s2">"@semantic-release/github"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w">
-            </span><span class="nl">"assets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-                </span><span class="p">{</span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"../../build/distributions/kcd.tar"</span><span class="p">,</span><span class="w">
-                 </span><span class="nl">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Assembly - Tar ${nextRelease.version}"</span><span class="p">},</span><span class="w">
-                </span><span class="p">{</span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"../../build/distributions/kcd.zip"</span><span class="p">,</span><span class="w">
-                 </span><span class="nl">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Assembly - Zip ${nextRelease.version}"</span><span class="p">},</span><span class="w">
-                </span><span class="p">{</span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"../../build/libs/kcd-*.jar"</span><span class="p">,</span><span class="w">
-                 </span><span class="nl">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Release Jar ${nextRelease.version}"</span><span class="p">},</span><span class="w">
-                </span><span class="p">{</span><span class="nl">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"../../build/libs/kcd-*-sources.jar"</span><span class="p">,</span><span class="w">
-                 </span><span class="nl">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Release SourceJar ${nextRelease.version}"</span><span class="p">}</span><span class="w">
-            </span><span class="p">]</span><span class="w">
-        </span><span class="p">}],</span><span class="w">
-        </span><span class="p">[</span><span class="s2">"@semantic-release/exec"</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="nl">"prepareCmd"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">"./release-files.sh ${nextRelease.version}"</span><span class="w">
-        </span><span class="p">}]</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span></code></pre>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>klar umrissene, wiederholbare Aufgaben</strong> übernimmt (z.B. systematische Code-Transformationen),</p>
+</li>
+<li>
+<p><strong>unter menschlicher Aufsicht</strong> agiert, vor allem bei Architekturfragen,</p>
+</li>
+<li>
+<p>und <strong>ihre Limitationen offen kommunizieren kann</strong> – was aktuell noch ein menschliches Monitoring erfordert.</p>
+</li>
+</ul>
 </div>
 </div>
+</div>
+<div class="sect1">
+<h2 id="fazit">Fazit</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p>In der oben aufgeführten Konfiguration sind einige Plugins des Semantic Release Toolset konfiguriert.
-Hervorzuheben sind das <a href="https://github.com/semantic-release/github">github-Plugin</a> und das <a href="https://github.com/semantic-release/exec">exec-Plugin</a>.</p>
-</div>
-<div class="paragraph">
-<p>Das exec-Plugin ruft in der Konfiguration in der "prepare"-Phase das Skript release-files.sh mit der erzeugten Versionsnummer auf.
-In diesem Skript wird der <a href="https://docs.gradle.org/current/userguide/publishing_maven.html">publish-Task</a> von gradle mit der übergebenen Versionsnummer aufgerufen und somit die in der gradle.build.kts angegebenen Artefakte versioniert und dann publiziert.</p>
-</div>
-<div class="listingblock">
-<div class="title">release-files.sh</div>
-<div class="content">
-<pre class="rouge highlight"><code data-lang="bash"><span class="c">#!/usr/bin/env sh</span>
-<span class="nb">cd</span> ../..
-./gradlew <span class="nt">-Pversion</span><span class="o">=</span><span class="nv">$1</span> publish</code></pre>
-</div>
+<p>Der Einsatz der KI war insgesamt <strong>erfolgreich</strong>, aber nicht ohne Schwächen. Gerade bei technischen Herausforderungen, die nach dem Trainingszeitpunkt der KI entstanden sind, zeigte sich: <strong>Aktualität ist ein strukturelles Defizit jeder KI</strong>. Jedoch kann insbesondere das hier verwendete Claude Sonnet 4 durch entsprechende Internet Recherche Lösungen anbieten.</p>
 </div>
 <div class="paragraph">
-<p>Über das github-Plugin werden durch gradle erzeugte Artefakte an das github-Release gehängt.
-Die angegebenen Dateien können dann über den Release-Tab des github-Projekts eingesehen werden.</p>
+<p>Für Unternehmen heißt das: Wer moderne Software-Stacks pflegt, sollte KIs mit <strong>aktuellen, datengetriebenen Tools wie Renovate oder Dependabot</strong> kombinieren – und auf menschliche Expertise nicht verzichten. Dennoch kann KI bereits jetzt den Entwicklungsprozess beschleunigen und insbesondere bei repititive Aufgaben den menschlichen Entwickler unterstützen.</p>
 </div>
-<div class="imageblock">
-<div class="content">
-<img src="resources/releases.png" alt="Releases">
-</div>
-</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
 <div class="paragraph">
-<p>Um das Semantic Release in einem gradle-basierten Prozess nutzen zu können, muss zuerst npm installiert werden.
-Weiterhin muss damit dann das Semantic Release und Plugins installiert werden.
-Dies kann über <code>npm install conventional-changelog-conventionalcommits @semantic-release/exec</code>
-passieren.
-Mit <code>npx</code>, einer Laufzeitumgebung für Node Pakete, kann das Release über den Befehl <code>npx semantic-release</code>
-erzeugt werden.</p>
+<p><strong>Kurz: KIs sind keine Alleskönner – aber sehr gute Assistenten.</strong></p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 </div>
 <div id="footer">

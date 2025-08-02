@@ -1,9 +1,0 @@
-$dokka.format:html-v1
-$dokka.linkExtension:html
-
-module:app
-org.javafreedom.app
-module:list
-org.javafreedom.list
-module:utilities
-org.javafreedom.utilities
