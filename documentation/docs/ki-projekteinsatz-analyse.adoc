@@ -3,46 +3,42 @@ Stärken, Schwächen und eine wichtige Lehre
 
 == Warum das Cut-off-Datum von KIs zählt
 
-Im Rahmen eines Projekts zur Modernisierung eines Kotlin-basierten Multi-Modul-Gradle-Builds wurde eine KI eingesetzt, um technische Altlasten zu entfernen, Codequalität zu verbessern und Tooling zu aktualisieren. Dabei zeigte sich: Künstliche Intelligenz kann vieles — aber nicht alles. Vor allem eine Grenze wurde deutlich sichtbar: Das *Trainings-Cut-off-Datum* der KI.
+Im Rahmen eines Projekts zur Modernisierung eines Multi-Modul-Projektes wurde eine KI eingesetzt, um technische Altlasten zu entfernen, Codequalität zu verbessern und Tooling zu aktualisieren. Dabei zeigte sich: Künstliche Intelligenz kann vieles — aber nicht alles. Vor allem eine Grenze wurde deutlich sichtbar: Das *Trainings-Cut-off-Datum* der KI.
 
-Während die KI in der Lage war, systematisch Abhängigkeiten zu entfernen, veraltete Konfigurationen zu aktualisieren um im vorliegenden Fall eine vollständige Migration auf *Dokka V2* durchzuführen, stieß sie bei komplexeren technischen Herausforderungen wie *Gradles Provider API* oder bei Versionssprüngen an ihre Grenzen.
+Während die KI in der Lage war, systematisch Abhängigkeiten zu entfernen, veraltete Konfigurationen zu aktualisieren um im vorliegenden Fall eine vollständige Migration auf neueres Tooling zur Erzeugung von Dokumentation durchzuführen, stieß sie bei komplexeren technischen Herausforderungen und bei Versionssprüngen an ihre Grenzen.
 
 Denn: Eine KI kennt neue Versionen oder veränderte APIs nur bis zu dem Stand, zu dem sie trainiert wurde. Alles, was danach veröffentlicht wurde, bleibt ihr unbekannt – *es sei denn, sie wird explizit darauf hingewiesen*.
 
 == Automatisierte Tools als Alternative: Renovate & Dependabot
 
-Gerade bei der reinen Aktualisierung von Abhängigkeiten und Plugins bieten sich daher spezialisierte Werkzeuge wie *Renovate* oder *Dependabot* an. Diese Tools agieren nicht auf Basis statischer Wissensstände, sondern analysieren live verfügbare Paketinformationen und Changelogs. Sie schlagen Updates automatisiert und zuverlässig vor – inklusive Versionshinweisen und Kompatibilitätswarnungen.
+Gerade bei der reinen Aktualisierung von Abhängigkeiten und Plugins bieten sich daher spezialisierte Werkzeuge wie *Renovate* oder *Dependabot* an. Diese Tools agieren nicht auf Basis statischer Wissensstände, sondern analysieren live verfügbare Paketinformationen und Changelogs. Sie schlagen Updates automatisiert und zuverlässig vor – inklusive Versionshinweisen und Kompatibilitätswarnungen. Allerdings können diese Tools im Gegensatz zu einer KI nicht noch weiterführende, ggf. benötigte Anpassungen vornehmen.
 
-[NOTE]
-====
-Für reine Versionserneuerungen sind diese Tools der KI überlegen, da sie stets auf dem aktuellen Stand sind. Der Mehrwert einer KI liegt eher in der strukturierten Analyse, Refaktorierung und Codequalität – nicht im Erkennen neuester Versionen.
-====
+Für reine Versionserneuerungen sind die genannten Tools der KI überlegen, da sie stets auf dem aktuellen Stand sind. Der Mehrwert einer KI liegt in der strukturierten Analyse, Refaktorierung und Codequalität – nicht im Erkennen neuester Versionen.
 
 == KI-Stärken im Projekt
 
 Trotz ihrer Einschränkungen lieferte die KI in vielen Bereichen starke Ergebnisse:
 
-* *Systematische Analysen*: Alle OWASP-Referenzen wurden über Build-Skripte, CI-Konfigurationen und Dokumentation hinweg identifiziert und entfernt.
-* *Codequalität*: Sämtliche Detekt-Warnungen (6 von 6) wurden behoben.
-* *Modernisierung*: Migration auf aktuelle Tool-Versionen wie Dokka 2.0 erfolgte mit umfassender Recherche und zukunftssicherer Konfiguration. Auch hier musste die KI die neueste Version von Dokka recherchieren, dies führte aber zum Erfolg.
-* *Build-Optimierung*: Konfigurationsprobleme im Gradle Cache wurden von 46 auf 4 reduziert.
+* *Systematische Analysen*: Alle Sicherheitsrelevanten-Referenzen wurden über Build-Skripte, CI-Konfigurationen und Dokumentation hinweg identifiziert und entfernt.
+* *Codequalität*: Sämtliche Warnungen der Statischen Code-Analyse wurden behoben.
+* *Modernisierung*: Migration auf aktuelle Tool-Versionen erfolgte mit umfassender Recherche und zukunftssicherer Konfiguration. Hier musste die KI für einiges Tools die neueste Version, nach einem manuellen Hinweis darauf, zwar recherchieren, dies führte aber zum Erfolg.
+* *Build-Optimierung*: Konfigurationsprobleme wurden deutlich reduziert.
+
+Diese Anpassungen wurde dank KI in kurzer Zeit erledigt und hätten manuell deutlich länger gebraucht.
 
 == Schwächen: Komplexität, Kontext und Über-Engineering
 
-In einigen Bereichen war jedoch *menschliches Eingreifen erforderlich*, insbesondere bei:
+In einigen Bereichen war *menschliches Eingreifen erforderlich*, insbesondere bei:
 
-* *Typ-Fehlern in Gradle (z. B. JaCoCo)*: Die KI probierte wiederholt komplexe Varianten des gleichen fehlerhaften Ansatzes – statt ihn grundsätzlich zu überdenken.
-* *Kontextualität*: Änderungen an Task-Namen wurden an anderer Stelle nicht korrekt mitgezogen.
+* *Komplexität*: Die KI probierte wiederholt komplexe Varianten des gleichen fehlerhaften Ansatzes – statt ihn grundsätzlich zu überdenken.
+* *Kontextualität*: Refactorings, wie z.B. Änderungen an Namen, wurden nicht an allen Stellen korrekt vorgenommen.
 * *Over-Engineering*: Einfache Probleme wurden unnötig kompliziert gelöst.
 
-[WARNING]
-====
 Ein zentrales Muster: Die KI ging oft davon aus, dass schwierige Probleme komplexe Lösungen benötigen — was nicht immer der Fall war.
-====
 
 == Empfehlungen: Mensch & KI als Team
 
-Der Bericht zeigt klar: Der optimale Einsatz von KI gelingt, wenn die KI
+Dieses Projekt zeigt klar: Der optimale Einsatz von KI gelingt, wenn die KI
 
 * *klar umrissene, wiederholbare Aufgaben* übernimmt (z.B. systematische Code-Transformationen),
 * *unter menschlicher Aufsicht* agiert, vor allem bei Architekturfragen,
@@ -52,9 +48,8 @@ Der Bericht zeigt klar: Der optimale Einsatz von KI gelingt, wenn die KI
 
 Der Einsatz der KI war insgesamt *erfolgreich*, aber nicht ohne Schwächen. Gerade bei technischen Herausforderungen, die nach dem Trainingszeitpunkt der KI entstanden sind, zeigte sich: *Aktualität ist ein strukturelles Defizit jeder KI*. Jedoch kann insbesondere das hier verwendete Claude Sonnet 4 durch entsprechende Internet Recherche Lösungen anbieten.
 
-Für Unternehmen heißt das: Wer moderne Software-Stacks pflegt, sollte KIs mit *aktuellen, datengetriebenen Tools wie Renovate oder Dependabot* kombinieren – und auf menschliche Expertise nicht verzichten. Dennoch kann KI bereits jetzt den Entwicklungsprozess beschleunigen und insbesondere bei repititive Aufgaben den menschlichen Entwickler unterstützen.
+Für Unternehmen heißt das: Wer moderne Software-Stacks pflegt, sollte KIs mit *aktuellen, datengetriebenen Tools wie Renovate oder Dependabot* kombinieren – und nicht auf menschliche Expertise verzichten. Dennoch kann KI bereits jetzt den Entwicklungsprozess beschleunigen und insbesondere bei repititive Aufgaben den menschlichen Entwickler unterstützen.
 
-[IMPORTANT]
-====
-*Kurz: KIs sind keine Alleskönner – aber sehr gute Assistenten.*
-====
+*Kurz: KIs sind, zum jetzigen Zeitpunkt, keine Alleskönner – aber sehr gute Assistenten.*
+
+Es ist davon auszugehen, dass aufgrund der Entwicklungsgeschwindigkeit bei KIs in (naher) Zukunft die Rolle der KI in der Softwaremodernisierung mächtiger, aktueller und kontextsensitiver wird. Aber sie bleibt ein Werkzeug im Team, kein Ersatz für menschliche Entwickler. Der Mensch wird nicht ersetzt, sondern verstärkt.
