@@ -29,4 +29,8 @@ dokka {
 dependencies {
     implementation(project(":app"))
     asciidoc(project(":documentation"))
+
+    dokka(project(":app"))
+    dokka(project(":list"))
+    dokka(project(":utilities"))
 }
