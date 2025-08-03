@@ -442,8 +442,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h1>KI-gestützte Modernisierung</h1>
 <div class="details">
 <span id="author" class="author">Stärken, Schwächen und eine wichtige Lehre</span><br>
-<span id="revnumber">version 2.0.2,</span>
-<span id="revdate">2025-08-02</span>
+<span id="revnumber">version 2.0.3,</span>
+<span id="revdate">2025-08-03</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -462,10 +462,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="warum-das-cut-off-datum-von-kis-zählt">Warum das Cut-off-Datum von KIs zählt</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Im Rahmen eines Projekts zur Modernisierung eines Kotlin-basierten Multi-Modul-Gradle-Builds wurde eine KI eingesetzt, um technische Altlasten zu entfernen, Codequalität zu verbessern und Tooling zu aktualisieren. Dabei zeigte sich: Künstliche Intelligenz kann vieles — aber nicht alles. Vor allem eine Grenze wurde deutlich sichtbar: Das <strong>Trainings-Cut-off-Datum</strong> der KI.</p>
+<p>Im Rahmen eines Projekts zur Modernisierung eines Multi-Modul-Projektes wurde eine KI eingesetzt, um technische Altlasten zu entfernen, Codequalität zu verbessern und Tooling zu aktualisieren. Dabei zeigte sich: Künstliche Intelligenz kann vieles — aber nicht alles. Vor allem eine Grenze wurde deutlich sichtbar: Das <strong>Trainings-Cut-off-Datum</strong> der KI.</p>
 </div>
 <div class="paragraph">
-<p>Während die KI in der Lage war, systematisch Abhängigkeiten zu entfernen, veraltete Konfigurationen zu aktualisieren um im vorliegenden Fall eine vollständige Migration auf <strong>Dokka V2</strong> durchzuführen, stieß sie bei komplexeren technischen Herausforderungen wie <strong>Gradles Provider API</strong> oder bei Versionssprüngen an ihre Grenzen.</p>
+<p>Während die KI in der Lage war, systematisch Abhängigkeiten zu entfernen, veraltete Konfigurationen zu aktualisieren um im vorliegenden Fall eine vollständige Migration auf neueres Tooling zur Erzeugung von Dokumentation durchzuführen, stieß sie bei komplexeren technischen Herausforderungen und bei Versionssprüngen an ihre Grenzen.</p>
 </div>
 <div class="paragraph">
 <p>Denn: Eine KI kennt neue Versionen oder veränderte APIs nur bis zu dem Stand, zu dem sie trainiert wurde. Alles, was danach veröffentlicht wurde, bleibt ihr unbekannt – <strong>es sei denn, sie wird explizit darauf hingewiesen</strong>.</p>
@@ -476,21 +476,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="automatisierte-tools-als-alternative-renovate-dependabot">Automatisierte Tools als Alternative: Renovate &amp; Dependabot</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Gerade bei der reinen Aktualisierung von Abhängigkeiten und Plugins bieten sich daher spezialisierte Werkzeuge wie <strong>Renovate</strong> oder <strong>Dependabot</strong> an. Diese Tools agieren nicht auf Basis statischer Wissensstände, sondern analysieren live verfügbare Paketinformationen und Changelogs. Sie schlagen Updates automatisiert und zuverlässig vor – inklusive Versionshinweisen und Kompatibilitätswarnungen.</p>
+<p>Gerade bei der reinen Aktualisierung von Abhängigkeiten und Plugins bieten sich daher spezialisierte Werkzeuge wie <strong>Renovate</strong> oder <strong>Dependabot</strong> an. Diese Tools agieren nicht auf Basis statischer Wissensstände, sondern analysieren live verfügbare Paketinformationen und Changelogs. Sie schlagen Updates automatisiert und zuverlässig vor – inklusive Versionshinweisen und Kompatibilitätswarnungen. Allerdings können diese Tools im Gegensatz zu einer KI nicht noch weiterführende, ggf. benötigte Anpassungen vornehmen.</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
 <div class="paragraph">
-<p>Für reine Versionserneuerungen sind diese Tools der KI überlegen, da sie stets auf dem aktuellen Stand sind. Der Mehrwert einer KI liegt eher in der strukturierten Analyse, Refaktorierung und Codequalität – nicht im Erkennen neuester Versionen.</p>
-</div>
-</td>
-</tr>
-</table>
+<p>Für reine Versionserneuerungen sind die genannten Tools der KI überlegen, da sie stets auf dem aktuellen Stand sind. Der Mehrwert einer KI liegt in der strukturierten Analyse, Refaktorierung und Codequalität – nicht im Erkennen neuester Versionen.</p>
 </div>
 </div>
 </div>
@@ -503,18 +492,21 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Systematische Analysen</strong>: Alle OWASP-Referenzen wurden über Build-Skripte, CI-Konfigurationen und Dokumentation hinweg identifiziert und entfernt.</p>
+<p><strong>Systematische Analysen</strong>: Alle Sicherheitsrelevanten-Referenzen wurden über Build-Skripte, CI-Konfigurationen und Dokumentation hinweg identifiziert und entfernt.</p>
 </li>
 <li>
-<p><strong>Codequalität</strong>: Sämtliche Detekt-Warnungen (6 von 6) wurden behoben.</p>
+<p><strong>Codequalität</strong>: Sämtliche Warnungen der Statischen Code-Analyse wurden behoben.</p>
 </li>
 <li>
-<p><strong>Modernisierung</strong>: Migration auf aktuelle Tool-Versionen wie Dokka 2.0 erfolgte mit umfassender Recherche und zukunftssicherer Konfiguration. Auch hier musste die KI die neueste Version von Dokka recherchieren, dies führte aber zum Erfolg.</p>
+<p><strong>Modernisierung</strong>: Migration auf aktuelle Tool-Versionen erfolgte mit umfassender Recherche und zukunftssicherer Konfiguration. Hier musste die KI für einiges Tools die neueste Version, nach einem manuellen Hinweis darauf, zwar recherchieren, dies führte aber zum Erfolg.</p>
 </li>
 <li>
-<p><strong>Build-Optimierung</strong>: Konfigurationsprobleme im Gradle Cache wurden von 46 auf 4 reduziert.</p>
+<p><strong>Build-Optimierung</strong>: Konfigurationsprobleme wurden deutlich reduziert.</p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>Diese Anpassungen wurde dank KI in kurzer Zeit erledigt und hätten manuell deutlich länger gebraucht.</p>
 </div>
 </div>
 </div>
@@ -522,34 +514,23 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="schwächen-komplexität-kontext-und-über-engineering">Schwächen: Komplexität, Kontext und Über-Engineering</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In einigen Bereichen war jedoch <strong>menschliches Eingreifen erforderlich</strong>, insbesondere bei:</p>
+<p>In einigen Bereichen war <strong>menschliches Eingreifen erforderlich</strong>, insbesondere bei:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Typ-Fehlern in Gradle (z. B. JaCoCo)</strong>: Die KI probierte wiederholt komplexe Varianten des gleichen fehlerhaften Ansatzes – statt ihn grundsätzlich zu überdenken.</p>
+<p><strong>Komplexität</strong>: Die KI probierte wiederholt komplexe Varianten des gleichen fehlerhaften Ansatzes – statt ihn grundsätzlich zu überdenken.</p>
 </li>
 <li>
-<p><strong>Kontextualität</strong>: Änderungen an Task-Namen wurden an anderer Stelle nicht korrekt mitgezogen.</p>
+<p><strong>Kontextualität</strong>: Refactorings, wie z.B. Änderungen an Namen, wurden nicht an allen Stellen korrekt vorgenommen.</p>
 </li>
 <li>
 <p><strong>Over-Engineering</strong>: Einfache Probleme wurden unnötig kompliziert gelöst.</p>
 </li>
 </ul>
 </div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Warning</div>
-</td>
-<td class="content">
 <div class="paragraph">
 <p>Ein zentrales Muster: Die KI ging oft davon aus, dass schwierige Probleme komplexe Lösungen benötigen — was nicht immer der Fall war.</p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 </div>
 </div>
@@ -557,7 +538,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="empfehlungen-mensch-ki-als-team">Empfehlungen: Mensch &amp; KI als Team</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Der Bericht zeigt klar: Der optimale Einsatz von KI gelingt, wenn die KI</p>
+<p>Dieses Projekt zeigt klar: Der optimale Einsatz von KI gelingt, wenn die KI</p>
 </div>
 <div class="ulist">
 <ul>
@@ -581,29 +562,21 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Der Einsatz der KI war insgesamt <strong>erfolgreich</strong>, aber nicht ohne Schwächen. Gerade bei technischen Herausforderungen, die nach dem Trainingszeitpunkt der KI entstanden sind, zeigte sich: <strong>Aktualität ist ein strukturelles Defizit jeder KI</strong>. Jedoch kann insbesondere das hier verwendete Claude Sonnet 4 durch entsprechende Internet Recherche Lösungen anbieten.</p>
 </div>
 <div class="paragraph">
-<p>Für Unternehmen heißt das: Wer moderne Software-Stacks pflegt, sollte KIs mit <strong>aktuellen, datengetriebenen Tools wie Renovate oder Dependabot</strong> kombinieren – und auf menschliche Expertise nicht verzichten. Dennoch kann KI bereits jetzt den Entwicklungsprozess beschleunigen und insbesondere bei repititive Aufgaben den menschlichen Entwickler unterstützen.</p>
+<p>Für Unternehmen heißt das: Wer moderne Software-Stacks pflegt, sollte KIs mit <strong>aktuellen, datengetriebenen Tools wie Renovate oder Dependabot</strong> kombinieren – und nicht auf menschliche Expertise verzichten. Dennoch kann KI bereits jetzt den Entwicklungsprozess beschleunigen und insbesondere bei repititive Aufgaben den menschlichen Entwickler unterstützen.</p>
 </div>
-<div class="admonitionblock important">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Important</div>
-</td>
-<td class="content">
 <div class="paragraph">
-<p><strong>Kurz: KIs sind keine Alleskönner – aber sehr gute Assistenten.</strong></p>
+<p><strong>Kurz: KIs sind, zum jetzigen Zeitpunkt, keine Alleskönner – aber sehr gute Assistenten.</strong></p>
 </div>
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>Es ist davon auszugehen, dass aufgrund der Entwicklungsgeschwindigkeit bei KIs in (naher) Zukunft die Rolle der KI in der Softwaremodernisierung mächtiger, aktueller und kontextsensitiver wird. Aber sie bleibt ein Werkzeug im Team, kein Ersatz für menschliche Entwickler. Der Mensch wird nicht ersetzt, sondern verstärkt.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 2.0.2<br>
-Last updated 2025-08-02 16:32:41 UTC
+Version 2.0.3<br>
+Last updated 2025-08-03 12:53:10 UTC
 </div>
 </div>
 </body>
