@@ -23,7 +23,7 @@ jobs:
           java-version: '21'
 
       - name: Validate Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@v3
+        uses: gradle/actions/wrapper-validation@v5
         
       - name: Setup Gradle and Compile
         uses: gradle/actions/setup-gradle@v3
@@ -43,7 +43,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
       - name: Validate Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@v3
+        uses: gradle/actions/wrapper-validation@v5
       - name: Validate Version Catalog
         uses: gradle/actions/setup-gradle@v3
         with:
