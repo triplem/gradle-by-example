@@ -13,7 +13,7 @@ asciidoctor = "4.0.4"
 
 # Code quality and security
 detekt = "1.23.7"
-sonarqube = "5.1.0.4882"
+sonarqube = "7.2.2.6593"
 
 # Logging
 kotlin-logging = "3.0.5"
