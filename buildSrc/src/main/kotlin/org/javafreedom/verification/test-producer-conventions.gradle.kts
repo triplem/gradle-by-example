@@ -24,17 +24,8 @@ testing {
         val integrationTest by registering(JvmTestSuite::class) {
             dependencies {
                 implementation(project())
-                // Inherit all test dependencies
-                implementation(platform(libs.findLibrary("kotlin-bom").get()))
-                implementation(libs.findLibrary("kotlin-stdlib").get())
-                implementation(libs.findLibrary("kotlinLogging").get())
-                implementation(libs.findLibrary("kotlin-test").get())
-                implementation(libs.findLibrary("kotlin-test-junit5").get())
-                implementation(libs.findLibrary("junitJupiterApi").get())
-                implementation(libs.findLibrary("assertkJvm").get())
-                runtimeOnly(libs.findLibrary("junitJupiterEngine").get())
             }
-            
+
             targets {
                 all {
                     testTask.configure {
@@ -46,6 +37,14 @@ testing {
             }
         }
     }
+}
+
+// Inherit dependencies from test suite
+configurations.named("integrationTestImplementation") {
+    extendsFrom(configurations.getByName("testImplementation"))
+}
+configurations.named("integrationTestRuntimeOnly") {
+    extendsFrom(configurations.getByName("testRuntimeOnly"))
 }
 
 // Configure Kotlin compilation to allow internal visibility for integration tests
@@ -61,26 +60,7 @@ tasks.check {
 
 // IDEA integration is handled automatically by test-suites plugin
 
-// -----------------------------
-// Add configuration to allow aggregation of unit-test-reports
-// -----------------------------
 
-// Share the test report data to be aggregated for the whole project
-configurations.create("binaryTestResultsElements") {
-    isVisible = false
-    isCanBeResolved = false
-    isCanBeConsumed = true
-    extendsFrom(configurations.implementation.get())
-    attributes {
-        attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category.DOCUMENTATION))
-        attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named("test-report-data"))
-    }
-
-    outgoing.artifact(tasks.test.map { task -> task.binaryResultsDirectory.get() })
-    outgoing.artifact(tasks.named("integrationTest").map { task -> 
-        (task as Test).binaryResultsDirectory.get() 
-    })
-}
 
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()

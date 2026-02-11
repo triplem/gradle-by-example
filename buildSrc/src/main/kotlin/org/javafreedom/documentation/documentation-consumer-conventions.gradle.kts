@@ -13,7 +13,7 @@ val asciidoc by configurations.creating {
 }
 
 val dokkaGenerateTask = tasks.named("dokkaGenerate")
-val testReportTask = tasks.named("testReport")
+val testReportTask = tasks.named("testAggregateTestReport")
 val jacocoReportTask = tasks.named("aggregateJacocoTestReport")
 val detektReportTask = tasks.named<Detekt>("aggregateDetekt")
 val rootDetektTask = tasks.named("detekt")
@@ -32,9 +32,11 @@ tasks.register<Copy>("aggregateReports") {
         into("dokka")
     }
     
-    from(layout.buildDirectory.dir("reports/allTests")) {
-        into("tests")
+    from(layout.buildDirectory.dir("reports/tests/test/aggregated-results")) {
+        into("tests/unit")
     }
+
+
     
     from(layout.buildDirectory.dir("reports/jacoco/aggregateJacocoTestReport")) {
         into("jacoco")
