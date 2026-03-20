@@ -106,4 +106,4 @@ The file /home/runner/work/gradle-by-example/gradle-by-example/modules/utilities
 
 ```
 
-generated with [detekt version 1.23.7](https://detekt.dev/) on 2025-08-03 13:02:18 UTC
+generated with [detekt version 1.23.8](https://detekt.dev/) on 2026-03-20 20:11:19 UTC
