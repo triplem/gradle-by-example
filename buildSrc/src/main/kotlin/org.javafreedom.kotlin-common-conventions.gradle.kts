@@ -50,6 +50,7 @@ dependencies {
 
     // Add additional dependencies useful for development
     implementation(libs.findLibrary("kotlinLogging").get())
+    implementation(libs.findLibrary("slf4jApi").get())
     
     // Testing dependencies
     testImplementation(libs.findBundle("testing").get())

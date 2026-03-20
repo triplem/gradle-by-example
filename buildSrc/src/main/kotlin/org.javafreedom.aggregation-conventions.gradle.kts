@@ -4,6 +4,7 @@ plugins {
     id("org.javafreedom.verification.jacoco-consumer-conventions")
     id("io.gitlab.arturbosch.detekt")
     id("org.sonarqube")
+    id("org.jetbrains.dokka")
 }
 
 // right now, there is no real aggregation of detekt, therefor we are just adding all
@@ -54,6 +55,21 @@ subprojects {
 
         tasks.matching { it.name == "sonar" }.configureEach {
             shouldRunAfter("detekt")
+        }
+    }
+}
+
+// Configure Dokka V2 for multi-module documentation
+dokka {
+    dokkaPublications.html {
+        outputDirectory.set(layout.buildDirectory.dir("dokka"))
+    }
+}
+
+dependencies {
+    subprojects.forEach { subproject ->
+        if (subproject.name != "documentation") {
+            dokka(subproject)
         }
     }
 }

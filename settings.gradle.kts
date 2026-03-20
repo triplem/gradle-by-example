@@ -9,6 +9,12 @@ pluginManagement {
     }
 }
 
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+    }
+}
+
 fun includeProject(dir: File) {
     include(dir.name)
     val prj = project(":${dir.name}")
